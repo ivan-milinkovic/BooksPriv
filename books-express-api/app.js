@@ -6,7 +6,8 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const { getBooks } = require("./db/db");
-require("./db/db");
+const { books } = require("./model");
+// require("./db/db");
 
 var app = express();
 
@@ -22,8 +23,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+// app.get("/books", async (req, res) => {
+//   const books = await getBooks(0, 100);
+//   res.send(books);
+// });
+
 app.get("/books", async (req, res) => {
-  const books = await getBooks(0, 100);
   res.send(books);
 });
 
