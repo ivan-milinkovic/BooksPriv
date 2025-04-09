@@ -81,6 +81,8 @@ const books = bookIndices.map((i): Book => {
     authors: someAuthors,
     forChildren: forChildren,
     image: null,
+    description:
+      'Praesent pulvinar condimentum scelerisque. Proin vitae sapien risus. Sed consequat ligula tortor, in porta est commodo nec. Etiam lobortis, libero id suscipit commodo, nisi lacus rhoncus nibh, non volutpat eros nulla faucibus mi. Duis risus libero, tempor at pulvinar ut, egestas iaculis orci. Quisque rutrum congue turpis, ut scelerisque leo lobortis vitae. Sed gravida porttitor vehicula. Pellentesque risus sem, pulvinar fermentum lorem nec, ullamcorper mollis lorem. Nulla in aliquet sem.',
   };
 });
 

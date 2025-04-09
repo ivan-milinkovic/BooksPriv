@@ -23,4 +23,5 @@ export type Book = {
   authors: Author[];
   forChildren: boolean;
   image?: string;
+  description: string;
 };

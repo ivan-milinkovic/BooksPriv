@@ -39,6 +39,25 @@ app.get('/books', async (req: Request, res: Response) => {
   res.send(books);
 });
 
+app.get('/books/:bookId', async (req: Request, res: Response) => {
+  console.log(req.params);
+  const { bookId } = req.params;
+  const bookIdNum = Number(bookId);
+  if (Number.isNaN(bookIdNum)) {
+    res.status(400);
+    res.end();
+    return;
+  }
+  const book = books.find((b) => b.id === bookIdNum);
+  if (!bookId) {
+    res.status(404);
+    res.end();
+    return;
+  }
+  res.status(200);
+  res.send(book);
+});
+
 app.use(function (req: Request, res: Response, next: NextFunction) {
   const err = createError(404);
   res.locals.message = err.message;

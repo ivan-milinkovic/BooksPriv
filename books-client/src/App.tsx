@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import Loading from "./Loading";
 import Books from "./books/Books";
+import BookDetails from "./books/BookDetails/BookDetails";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,10 @@ function App() {
         {
           path: "",
           element: <Books />,
+        },
+        {
+          path: "/books/:bookId",
+          element: <BookDetails />,
         },
         {
           path: "login",
