@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import CartButton from "./Cart/CartButton";
 
 const Header = () => {
   const isLoggedIn = false;
@@ -20,9 +21,14 @@ const Header = () => {
             </Link>
           </>
         ) : (
-          <Link to="/login" className="">
-            Login
-          </Link>
+          <>
+            <span className="ms-2">
+              <CartButton />
+            </span>
+            <Link to="/login" className="ms-2">
+              Login
+            </Link>
+          </>
         )}
       </div>
     </header>
