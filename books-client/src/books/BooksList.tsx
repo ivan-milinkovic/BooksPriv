@@ -6,9 +6,11 @@ type Props = {
 };
 export const BooksList = ({ books }: Props) => {
   return (
-    <div>
+    <div className="flex flex-row flex-wrap w-[700px]">
       {books.map((b) => (
-        <BookCard book={b} />
+        <div className="m-4">
+          <BookCard key={b.id} book={b} />
+        </div>
       ))}
     </div>
   );

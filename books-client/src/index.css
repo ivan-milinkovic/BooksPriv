@@ -16,6 +16,7 @@
   --primary-color: var(--color-blue-300);
   --secondary-color: var(--color-gray-300);
   --text-color: var(--color-white);
+  --text-subtle-color: var(--color-gray-300);
 }
 
 html,
@@ -37,6 +38,7 @@ body {
   font-size: var(--text-base);
   color: var(--primary-color);
   border-color: var(--primary-color);
+  padding: 2px 8px;
   cursor: pointer;
 }
 
@@ -47,6 +49,7 @@ body {
   font-size: var(--text-base);
   color: var(--secondary-color);
   border-color: var(--secondary-color);
+  padding: 2px 8px;
   cursor: pointer;
 }
 
@@ -54,4 +57,8 @@ body {
   font-size: var(--text-base);
   color: var(--primary-color);
   cursor: pointer;
+}
+
+.subtle-text {
+  color: var(--text-subtle-color);
 }

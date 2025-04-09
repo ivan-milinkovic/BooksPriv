@@ -8,7 +8,6 @@ const Books = () => {
   const booksQuery = useSuspenseQuery({
     queryKey: [GetBooksQuery],
     queryFn: async (): Promise<Book[]> => {
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
       var res = await apiAxios.get("books");
       const books = res.data as Book[];
       return books;
