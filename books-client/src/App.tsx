@@ -5,6 +5,9 @@ import Admin from "./admin/Admin";
 import Login from "./auth/Login";
 import Dev from "./Dev";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense } from "react";
+import Loading from "./Loading";
+import Books from "./books/Books";
 
 const queryClient = new QueryClient();
 
@@ -14,7 +17,9 @@ const Layout = () => {
       <QueryClientProvider client={queryClient}>
         <Header />
         <div className="flex flex-col items-center">
-          <Outlet />
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
         </div>
       </QueryClientProvider>
     </div>
@@ -29,7 +34,7 @@ function App() {
       children: [
         {
           path: "",
-          element: <>Book list</>,
+          element: <Books />,
         },
         {
           path: "login",
