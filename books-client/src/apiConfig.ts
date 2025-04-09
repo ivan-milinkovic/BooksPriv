@@ -1,4 +1,5 @@
-export const ApiUrl = "http://localhost:5173/api";
+export const proxy = "api";
+export const ApiUrl = "http://localhost:5173/" + proxy;
 
 export const jsonHeaders = {
   "Content-Type": "application/json",
