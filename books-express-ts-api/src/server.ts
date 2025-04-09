@@ -3,7 +3,7 @@ import express from 'express';
 import logger from 'morgan';
 // import http from 'http';
 import { Request, Response, NextFunction } from 'express';
-import { books } from './model';
+import { books } from './data';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
