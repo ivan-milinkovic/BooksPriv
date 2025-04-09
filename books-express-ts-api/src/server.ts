@@ -3,7 +3,8 @@ import express from 'express';
 import logger from 'morgan';
 // import http from 'http';
 import { Request, Response, NextFunction } from 'express';
-import { books } from './data';
+import { adultGenres, authors, books, childrenGenres } from './data';
+import { Genres } from './model';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -20,7 +21,21 @@ app.get('/', async (req: Request, res: Response) => {
   res.send('root');
 });
 
+app.get('/authors', async (req: Request, res: Response) => {
+  res.send(authors);
+});
+
+app.get('/genres', async (req: Request, res: Response) => {
+  res.status(200);
+  const genres: Genres = {
+    children: childrenGenres,
+    adult: adultGenres,
+  };
+  res.send(genres);
+});
+
 app.get('/books', async (req: Request, res: Response) => {
+  res.status(200);
   res.send(books);
 });
 
@@ -34,7 +49,7 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
 
 app.listen(serverConfig.port, (err?: Error) => {
   err && console.error(`error: ${err}`);
-  console.log(`Listegning on port: ${serverConfig.port}`);
+  console.log(`Listening on port: ${serverConfig.port}`);
 });
 
 /*
