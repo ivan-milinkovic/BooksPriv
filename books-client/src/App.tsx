@@ -4,14 +4,19 @@ import Header from "./Header";
 import Admin from "./admin/Admin";
 import Login from "./auth/Login";
 import Dev from "./Dev";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const Layout = () => {
   return (
     <div className="">
-      <Header />
-      <div className="flex flex-col items-center">
-        <Outlet />
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <Header />
+        <div className="flex flex-col items-center">
+          <Outlet />
+        </div>
+      </QueryClientProvider>
     </div>
   );
 };
