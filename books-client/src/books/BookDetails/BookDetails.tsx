@@ -24,8 +24,7 @@ const BookDetails = () => {
   if (bookQuery.isLoading) return <Loading />;
 
   const book = bookQuery.data as Book;
-  const showsAddButton =
-    cartState.books.findIndex((b) => b.id === book.id) === -1; // if not in cart
+  const isInCart = cartState.books.findIndex((b) => b.id === book.id) !== -1;
 
   return (
     <div>
@@ -63,18 +62,18 @@ const BookDetails = () => {
             <span></span>
           </span>
           <span>
-            {showsAddButton ? (
+            {isInCart ? (
+              <span>In cart</span>
+            ) : (
               <button
                 onClick={() => {
                   addToCart(book);
                 }}
                 className="primary-button"
-                hidden={!showsAddButton}
+                hidden={isInCart}
               >
                 Add to Cart
               </button>
-            ) : (
-              <span>In cart</span>
             )}
           </span>
         </div>
