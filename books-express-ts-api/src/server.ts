@@ -1,17 +1,16 @@
-import serverConfig from './ServerConfig';
+import serverConfig from './config';
 import express from 'express';
-import http from 'http';
 import logger from 'morgan';
+// import http from 'http';
 import { Request, Response, NextFunction } from 'express';
 import { books } from './model';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var debug = require('debug')('books-server:server');
 
 var app = express();
 
-app.use(logger(serverConfig.isDev ? 'dev' : 'combined'));
+app.use(logger('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -33,11 +32,12 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
   res.end();
 });
 
-// app.listen(serverConfig.port, (err?: Error) => {
-//   err && console.log(`error: ${err}`);
-//   console.log(`Listegning on port: ${serverConfig.port}`);
-// });
+app.listen(serverConfig.port, (err?: Error) => {
+  err && console.error(`error: ${err}`);
+  console.log(`Listegning on port: ${serverConfig.port}`);
+});
 
+/*
 app.set('port', serverConfig.port);
 var server = http.createServer(app);
 
@@ -61,7 +61,8 @@ server.on('error', function onError(error: any) {
 });
 
 server.on('listening', function onListening() {
-  debug('Listening on ' + serverConfig.port);
+  console.log('Listening on ' + serverConfig.port);
 });
 
 server.listen(serverConfig.port);
+*/
