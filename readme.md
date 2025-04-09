@@ -10,6 +10,7 @@ https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_l
 - admin delete many books
 - admin edit book
 - admin add author
+- book images
 
 # Express
 
@@ -22,3 +23,9 @@ https://blog.logrocket.com/express-typescript-node/
 https://medium.com/@gabrieldrouin/node-js-2025-guide-how-to-setup-express-js-with-typescript-eslint-and-prettier-b342cd21c30d
 
 https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production
+
+# Attribution
+
+Book placeholders found at:
+https://pixabay.com/photos/music-book-old-literature-hymnal-3510326/
+https://pixabay.com/photos/book-pages-chapters-open-open-book-1283865/

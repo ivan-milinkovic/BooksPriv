@@ -69,6 +69,8 @@ const books = bookIndices.map((i): Book => {
     ? randomSlice1(childrenGenres)
     : randomSlice1(adultGenres);
 
+  const placeholderNum = Math.random() < 0.5 ? 1 : 2;
+
   return {
     id: i,
     title: `Book ${i}`,
@@ -80,7 +82,7 @@ const books = bookIndices.map((i): Book => {
     genres: genres,
     authors: someAuthors,
     forChildren: forChildren,
-    image: null,
+    image: `/public/images/placeholder${placeholderNum}.jpg`,
     description:
       'Praesent pulvinar condimentum scelerisque. Proin vitae sapien risus. Sed consequat ligula tortor, in porta est commodo nec. Etiam lobortis, libero id suscipit commodo, nisi lacus rhoncus nibh, non volutpat eros nulla faucibus mi. Duis risus libero, tempor at pulvinar ut, egestas iaculis orci. Quisque rutrum congue turpis, ut scelerisque leo lobortis vitae. Sed gravida porttitor vehicula. Pellentesque risus sem, pulvinar fermentum lorem nec, ullamcorper mollis lorem. Nulla in aliquet sem.',
   };

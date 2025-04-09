@@ -8,6 +8,7 @@ import { Genres } from './model';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const rootPath = path.join(__dirname, '../');
 
 var app = express();
 
@@ -15,7 +16,7 @@ app.use(logger('common'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(rootPath, '/public')));
 
 app.get('/', async (req: Request, res: Response) => {
   res.send('root');
