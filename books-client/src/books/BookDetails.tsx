@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
-import Loading from "../../Loading";
-import { Author, Book } from "../../model";
-import { apiAxios } from "../../axios";
-import useCart from "../../Cart/useCart";
+import Loading from "../Loading";
+import { Author, Book } from "../model";
+import { apiAxios } from "../axios";
+import useCart from "../Cart/useCart";
 
 const BookDetails = () => {
   const { bookId } = useParams();

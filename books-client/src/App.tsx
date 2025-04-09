@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import Loading from "./Loading";
 import Books from "./books/Books";
-import BookDetails from "./books/BookDetails/BookDetails";
+import BookDetails from "./books/BookDetails";
 import CartDetails from "./Cart/CartDetails";
 import CartProvider from "./Cart/CartProvider";
 
