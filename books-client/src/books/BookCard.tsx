@@ -1,10 +1,12 @@
 import { Link } from "react-router";
 import { Author, Book } from "../model";
+import useCart from "../Cart/useCart";
 
 type Props = {
   book: Book;
 };
 export const BookCard = ({ book }: Props) => {
+  const { addToCart } = useCart();
   function formatAuthors(authors: Author[]): string {
     return authors.map((a) => a.name).join(", ");
   }
@@ -20,7 +22,14 @@ export const BookCard = ({ book }: Props) => {
       <div>
         Price: <span>{book.price}</span>
       </div>
-      <button className="link">Add to Cart</button>
+      <button
+        onClick={() => {
+          addToCart(book);
+        }}
+        className="link"
+      >
+        Add to Cart
+      </button>
     </div>
   );
 };

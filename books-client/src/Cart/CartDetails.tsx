@@ -8,9 +8,11 @@ const CartDetails = () => {
       <div className="text-2xl">Cart</div>
       <table className="table-auto border-separate border-spacing-2">
         <thead>
-          <th>Title</th>
-          <th>Price</th>
-          <th></th>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
           {cart.cartState.books.map((b) => (

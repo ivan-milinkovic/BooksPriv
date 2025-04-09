@@ -11,15 +11,15 @@ const CartProvider = ({ children }: Props) => {
   const [cartState, setCartState] = useState<CartState>(new CartState([]));
 
   function addToCart(book: Book) {
-    // const isAlreadyInCart =
-    //   cartState.books.findIndex((b) => b.id === book.id) !== -1;
-    // if (isAlreadyInCart) return;
+    const isAlreadyInCart =
+      cartState.books.findIndex((b) => b.id === book.id) !== -1;
+    if (isAlreadyInCart) return;
     const newBooks = [...cartState.books, book];
     setCartState(new CartState(newBooks));
   }
 
   function removeFromCart(bookId: number) {
-    const newBooks = cartState.books.filter((b) => b.id === bookId);
+    const newBooks = cartState.books.filter((b) => b.id !== bookId);
     setCartState(new CartState(newBooks));
   }
 
