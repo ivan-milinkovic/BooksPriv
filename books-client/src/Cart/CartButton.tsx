@@ -9,7 +9,7 @@ type Props = {
 };
 
 const CartButton = ({ hover }: Props) => {
-  const [showPreview, setShowPreview] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
 
   function onHover() {
     if (!hover) return;
