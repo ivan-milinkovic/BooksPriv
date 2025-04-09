@@ -23,7 +23,7 @@ const Header = () => {
         ) : (
           <>
             <span className="ms-2">
-              <CartButton />
+              <CartButton hover={true} />
             </span>
             <Link to="/login" className="ms-2">
               Login

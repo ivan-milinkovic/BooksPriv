@@ -17,6 +17,7 @@
   --secondary-color: var(--color-gray-300);
   --text-color: var(--color-white);
   --text-subtle-color: var(--color-gray-300);
+  --subtle-background-color: rgb(48, 56, 69);
 }
 
 html,
@@ -61,4 +62,8 @@ body {
 
 .subtle-text {
   color: var(--text-subtle-color);
+}
+
+.subtle-background {
+  background-color: var(--subtle-background-color);
 }

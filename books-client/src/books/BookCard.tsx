@@ -17,7 +17,7 @@ export const BookCard = ({ book }: Props) => {
   }, [cartState]);
 
   return (
-    <div className="rounded-3xl bg-gray-800 w-[200px] h-[200px] p-4">
+    <div className="rounded-3xl subtle-background w-[200px] h-[200px] p-4">
       <Link to={`/books/${book.id}`} className="text-2xl">
         {book.title}
       </Link>
