@@ -1,4 +1,6 @@
-const nonFictionGenres = [
+type Genre = string;
+
+const nonFictionGenres: Genre[] = [
   'Science',
   'Fiction',
   'Mystery',
@@ -9,7 +11,7 @@ const nonFictionGenres = [
   'Contemporary Fiction',
 ];
 
-const ChildrenAndYoungAdultGenres = [
+const ChildrenAndYoungAdultGenres: Genre[] = [
   'Picture Books',
   'Early Readers',
   'Middle Grade',
@@ -19,7 +21,7 @@ const ChildrenAndYoungAdultGenres = [
   'Educational',
 ];
 
-const adultGenres = [
+const adultGenres: Genre[] = [
   'Historical Romance',
   'Contemporary Romance',
   'Romantic Comedy',
@@ -32,7 +34,13 @@ const adultGenres = [
   'Historical Fiction',
 ];
 
-const authors = [
+type Author = {
+  name: string;
+  bio: string;
+  dateOfBirth: Date;
+};
+
+const authors: Author[] = [
   {
     name: 'Author 1',
     bio: 'Biography 1',
@@ -50,7 +58,19 @@ const authors = [
   },
 ];
 
-const books = [
+type Book = {
+  id: number;
+  title: string;
+  isbn: string;
+  quantity: number;
+  publishDate: Date;
+  pageCount: number;
+  genres: Genre[];
+  authors: Author[];
+  forChildren: boolean;
+};
+
+const books: Book[] = [
   {
     id: 1,
     title: 'Book 1',
@@ -60,6 +80,7 @@ const books = [
     pageCount: 200,
     genres: [nonFictionGenres[0], nonFictionGenres[1]],
     authors: [authors[0]],
+    forChildren: true,
   },
   {
     id: 2,
@@ -70,6 +91,7 @@ const books = [
     pageCount: 300,
     genres: [nonFictionGenres[2], nonFictionGenres[3], nonFictionGenres[5]],
     authors: [authors[1], authors[2]],
+    forChildren: true,
   },
 ];
 
