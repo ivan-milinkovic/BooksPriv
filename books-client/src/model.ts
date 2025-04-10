@@ -31,3 +31,8 @@ export type BooksResponse = {
   pageSize: number;
   books: Book[];
 };
+
+export type Cursor = {
+  pageIndex: number;
+  pageSize: number;
+};
