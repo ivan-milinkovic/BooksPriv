@@ -17,10 +17,10 @@ const Header = () => {
         {isLoggedIn ? (
           <>
             <span>{userInfo?.email}</span>
-            <span className="">
+            <span className="link">
               <CartButton hover={true} />
             </span>
-            <Link to="/admin" className="">
+            <Link to="/admin" className="link">
               Admin
             </Link>
             <span className="">
@@ -29,10 +29,10 @@ const Header = () => {
           </>
         ) : (
           <>
-            <span className="">
+            <span className="link">
               <CartButton hover={true} />
             </span>
-            <Link to="/login" className="">
+            <Link to="/login" className="link">
               Login
             </Link>
           </>
