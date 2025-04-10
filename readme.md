@@ -4,8 +4,6 @@ https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_l
 
 - filters
 - admin add book modal
-- admin delete book
-- admin delete many books
 - admin edit book
 - admin add author
 
