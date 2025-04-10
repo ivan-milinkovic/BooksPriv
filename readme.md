@@ -2,12 +2,12 @@
 
 https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_layouts/15/Doc.aspx?sourcedoc=%7B0C06BC5D-FF6F-4745-AD84-1D61195978DB%7D&file=Document.docx&wdLOR=c04843E39-0CBB-DB49-AA2F-E2A7BE0DB19B&fromShare=true&action=default&mobileredirect=true
 
-- admin list books
 - admin add book modal
 - admin delete book
 - admin delete many books
 - admin edit book
 - admin add author
+- filters
 
 # Run
 
@@ -22,6 +22,7 @@ or
 
 https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries
 https://gist.github.com/emanuer/8897917e8d5b043dd9285455161ebadc
+https://www.react-hook-form.com/get-started/#Applyvalidation
 
 # Express
 

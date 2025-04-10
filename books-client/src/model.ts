@@ -17,7 +17,7 @@ export type Book = {
   isbn: string;
   price: number;
   quantity: number;
-  publishDate: Date;
+  publishDate: string;
   pageCount: number;
   genres: Genre[];
   authors: Author[];
@@ -41,3 +41,23 @@ export type UserInfo = {
   email: string;
   isGuest: boolean;
 };
+
+// export class Cursor {
+//   public readonly pageIndex: number;
+//   public readonly pageSize: number;
+
+//   constructor(pageIndex: number, pageSize: number) {
+//     this.pageIndex = pageIndex;
+//     this.pageSize = pageSize;
+//   }
+
+//   public nextCursor(expectedPageSize: number): Cursor | null {
+//     if (this.pageSize < expectedPageSize) return null;
+//     return new Cursor(this.pageIndex + 1, expectedPageSize);
+//   }
+
+//   public prevCursor(expectedPageSize: number): Cursor | null {
+//     if (this.pageIndex == 0) return null;
+//     return new Cursor(this.pageIndex - 1, expectedPageSize);
+//   }
+// }

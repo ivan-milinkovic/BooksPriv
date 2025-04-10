@@ -1,5 +1,11 @@
+import AdminBooks from "./AdminBooks";
+
 const Admin = () => {
-  return <>Admin</>;
+  return (
+    <>
+      <AdminBooks />
+    </>
+  );
 };
 
 export default Admin;
