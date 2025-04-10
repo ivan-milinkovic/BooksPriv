@@ -4,6 +4,7 @@ import Loading from "../Loading";
 import { Author, Book } from "../model";
 import { apiAxios } from "../axios";
 import useCart from "../Cart/useCart";
+import { ApiUrl } from "../apiConfig";
 
 const BookDetails = () => {
   const { bookId } = useParams();
@@ -25,6 +26,7 @@ const BookDetails = () => {
 
   const book = bookQuery.data as Book;
   const isInCart = cartState.books.findIndex((b) => b.id === book.id) !== -1;
+  const imageUrl = book.image ? ApiUrl + book.image : "";
 
   return (
     <div>
@@ -75,6 +77,12 @@ const BookDetails = () => {
                 Add to Cart
               </button>
             )}
+          </span>
+        </div>
+        <div className="table-row">
+          <span className="table-cell subtle-text">Cover</span>
+          <span className="table-cell">
+            <img src={imageUrl} alt="" />
           </span>
         </div>
       </div>

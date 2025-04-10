@@ -1,4 +1,4 @@
-export const proxy = "api";
+const proxy = "api";
 export const ApiUrl = "http://localhost:5173/" + proxy;
 
 export const jsonHeaders = {

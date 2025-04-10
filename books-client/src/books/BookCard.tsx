@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Author, Book } from "../model";
 import useCart from "../Cart/useCart";
 import { useMemo } from "react";
-import { proxy } from "../apiConfig";
+import { ApiUrl } from "../apiConfig";
 
 type Props = {
   book: Book;
@@ -17,8 +17,8 @@ export const BookCard = ({ book }: Props) => {
     return cartState.books.findIndex((b) => b.id === book.id) !== -1;
   }, [cartState]);
 
-  const bgImage = proxy + book.image;
-  // const bgImageCss = `bg-[url(${proxy + book.image})]`;
+  const bgImageUrl = ApiUrl + book.image;
+  // const bgImageCss = `bg-[url(${bgImageUrl})]`;
 
   return (
     <div
@@ -27,7 +27,7 @@ export const BookCard = ({ book }: Props) => {
         // + bgImageCss
       }
     >
-      {book.image && <img src={bgImage} alt="" className="rounded-t-2xl" />}
+      {book.image && <img src={bgImageUrl} alt="" className="rounded-t-2xl" />}
       <div className="text-shadow-lg/30 backdrop-blur-md rounded-2xl p-2">
         <Link to={`/books/${book.id}`} className="text-2xl">
           {book.title}
