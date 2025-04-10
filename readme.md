@@ -12,6 +12,15 @@ https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_l
 - admin add author
 - book images
 
+# Run
+
+`zsh run.sh`
+
+or
+
+`cd books-server && npm run dev`
+`cd books-client && npm run dev`
+
 # Express
 
 https://github.com/TryGhost/node-sqlite3
