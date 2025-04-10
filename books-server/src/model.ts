@@ -38,10 +38,14 @@ export type Cursor = {
 };
 
 export type BooksSession = {
-  user: string;
+  email: string;
 };
 
 export type User = {
   email: string;
   password: string;
+};
+
+export type UserInfo = {
+  email: string;
 };

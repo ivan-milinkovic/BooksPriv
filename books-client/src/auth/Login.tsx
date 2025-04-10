@@ -2,6 +2,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { apiAxios } from "../axios";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { GetUserInfoQuery } from "../queryKeys";
 
 type Inputs = {
   email: string;
@@ -15,9 +17,8 @@ const Login = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  console.log(errors);
 
   const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
     try {
@@ -26,6 +27,7 @@ const Login = () => {
         url: "/login",
         data: JSON.stringify(inputs),
       });
+      queryClient.invalidateQueries({ queryKey: [GetUserInfoQuery] });
       navigate("/admin");
     } catch (err) {
       const e = err as AxiosError;

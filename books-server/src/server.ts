@@ -4,7 +4,7 @@ import logger from 'morgan';
 // import http from 'http';
 import { Request, Response, NextFunction } from 'express';
 import { adminUser, adultGenres, authors, books, childrenGenres } from './data';
-import { BooksResponse, BooksSession, Cursor, Genres } from './model';
+import { BooksResponse, BooksSession, Cursor, Genres, UserInfo } from './model';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -23,7 +23,6 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 app.post('/login', async (req: Request, res: Response) => {
-  console.log(req.body);
   if (
     req.body.email !== adminUser.email ||
     req.body.password !== adminUser.password
@@ -32,9 +31,9 @@ app.post('/login', async (req: Request, res: Response) => {
     res.end();
     return;
   }
-  const booksSession: BooksSession = { user: adminUser.email };
+  const booksSession: BooksSession = { email: adminUser.email };
   const sessionString = JSON.stringify(booksSession);
-  res.cookie('books-session', sessionString, {
+  res.cookie(serverConfig.sessionCookieName, sessionString, {
     maxAge: 60 * 60 * 1000,
     httpOnly: true,
     secure: false,
@@ -43,15 +42,30 @@ app.post('/login', async (req: Request, res: Response) => {
   res.end();
 });
 
+app.get('/logout', async (req: Request, res: Response) => {
+  res.clearCookie(serverConfig.sessionCookieName);
+  res.status(200);
+  res.end();
+});
+
 app.get('/whoami', async (req: Request, res: Response) => {
-  const sessionString = req.cookies['books-session'];
-  const booksSession = JSON.parse(sessionString);
+  const sessionString = req.cookies[serverConfig.sessionCookieName];
+  if (!sessionString) {
+    res.status(401);
+    res.end();
+    return;
+  }
+  const booksSession: BooksSession = JSON.parse(sessionString);
   if (!booksSession) {
     res.status(401);
     res.end();
     return;
   }
-  res.send(booksSession.email);
+  const userInfo: UserInfo = {
+    email: booksSession.email,
+  };
+  console.log(userInfo);
+  res.send(userInfo);
 });
 
 app.get('/authors', async (req: Request, res: Response) => {

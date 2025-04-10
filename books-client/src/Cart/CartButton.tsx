@@ -14,7 +14,6 @@ const CartButton = ({ hover }: Props) => {
   function onHover() {
     if (!hover) return;
     setShowPreview(true);
-    console.log("hover");
   }
 
   function onHoverEnd() {

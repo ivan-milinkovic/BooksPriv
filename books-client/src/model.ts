@@ -36,3 +36,7 @@ export type Cursor = {
   pageIndex: number;
   pageSize: number;
 };
+
+export type UserInfo = {
+  email: string;
+};

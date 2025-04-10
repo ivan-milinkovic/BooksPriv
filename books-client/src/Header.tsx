@@ -1,8 +1,11 @@
 import { Link } from "react-router";
 import CartButton from "./Cart/CartButton";
+import Logout from "./auth/Logout";
+import { useUserInfo } from "./auth/useUserInfo";
 
 const Header = () => {
-  const isLoggedIn = false;
+  const userInfo = useUserInfo();
+  const isLoggedIn: boolean = !!userInfo;
 
   return (
     <header className="flex flex-row justify-between m-4">
@@ -13,12 +16,11 @@ const Header = () => {
       <div>
         {isLoggedIn ? (
           <>
+            <span>{userInfo?.email}</span>
             <Link to="/admin" className="">
               Admin
             </Link>
-            <Link to="/" className="ms-2">
-              Logout
-            </Link>
+            <Logout />
           </>
         ) : (
           <>

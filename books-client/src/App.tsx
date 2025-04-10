@@ -11,6 +11,7 @@ import Books from "./books/Books";
 import BookDetails from "./books/BookDetails";
 import CartDetails from "./Cart/CartDetails";
 import CartProvider from "./Cart/CartProvider";
+import UserProvider from "./auth/UserProvider";
 
 const queryClient = new QueryClient();
 
@@ -18,14 +19,16 @@ const Layout = () => {
   return (
     <div className="">
       <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <Header />
-          <div className="flex flex-col items-center">
-            <Suspense fallback={<Loading />}>
-              <Outlet />
-            </Suspense>
-          </div>
-        </CartProvider>
+        <UserProvider>
+          <CartProvider>
+            <Header />
+            <div className="flex flex-col items-center">
+              <Suspense fallback={<Loading />}>
+                <Outlet />
+              </Suspense>
+            </div>
+          </CartProvider>
+        </UserProvider>
       </QueryClientProvider>
     </div>
   );
