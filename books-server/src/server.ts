@@ -3,8 +3,8 @@ import express from 'express';
 import logger from 'morgan';
 // import http from 'http';
 import { Request, Response, NextFunction } from 'express';
-import { adultGenres, authors, books, childrenGenres } from './data';
-import { BooksResponse, Cursor, Genres } from './model';
+import { adminUser, adultGenres, authors, books, childrenGenres } from './data';
+import { BooksResponse, BooksSession, Cursor, Genres } from './model';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -20,6 +20,38 @@ app.use('/public', express.static(path.join(rootPath, '/public')));
 
 app.get('/', async (req: Request, res: Response) => {
   res.send('root');
+});
+
+app.post('/login', async (req: Request, res: Response) => {
+  console.log(req.body);
+  if (
+    req.body.email !== adminUser.email ||
+    req.body.password !== adminUser.password
+  ) {
+    res.status(401);
+    res.end();
+    return;
+  }
+  const booksSession: BooksSession = { user: adminUser.email };
+  const sessionString = JSON.stringify(booksSession);
+  res.cookie('books-session', sessionString, {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+  });
+  res.end();
+});
+
+app.get('/whoami', async (req: Request, res: Response) => {
+  const sessionString = req.cookies['books-session'];
+  const booksSession = JSON.parse(sessionString);
+  if (!booksSession) {
+    res.status(401);
+    res.end();
+    return;
+  }
+  res.send(booksSession.email);
 });
 
 app.get('/authors', async (req: Request, res: Response) => {

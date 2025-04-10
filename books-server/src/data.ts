@@ -1,4 +1,9 @@
-import { Author, Book, Genre } from './model';
+import { Author, Book, Genre, User } from './model';
+
+export const adminUser: User = {
+  email: 'admin@books',
+  password: '123',
+};
 
 const nonFictionGenres: Genre[] = [
   'Science',

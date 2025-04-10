@@ -36,3 +36,12 @@ export type Cursor = {
   pageIndex: number;
   pageSize: number;
 };
+
+export type BooksSession = {
+  user: string;
+};
+
+export type User = {
+  email: string;
+  password: string;
+};

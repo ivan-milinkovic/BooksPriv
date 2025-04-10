@@ -21,6 +21,11 @@ or
 `cd books-server && npm run dev`
 `cd books-client && npm run dev`
 
+# Client
+
+https://tanstack.com/query/latest/docs/framework/react/guides/infinite-queries
+https://gist.github.com/emanuer/8897917e8d5b043dd9285455161ebadc
+
 # Express
 
 https://github.com/TryGhost/node-sqlite3
