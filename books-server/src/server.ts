@@ -3,7 +3,14 @@ import express from 'express';
 import logger from 'morgan';
 // import http from 'http';
 import { Request, Response, NextFunction } from 'express';
-import { adminUser, adultGenres, authors, books, childrenGenres } from './data';
+import {
+  adminUser,
+  adultGenres,
+  authors,
+  books,
+  childrenGenres,
+  guestUserInfo,
+} from './data';
 import { BooksResponse, BooksSession, Cursor, Genres, UserInfo } from './model';
 var createError = require('http-errors');
 var path = require('path');
@@ -51,20 +58,18 @@ app.get('/logout', async (req: Request, res: Response) => {
 app.get('/whoami', async (req: Request, res: Response) => {
   const sessionString = req.cookies[serverConfig.sessionCookieName];
   if (!sessionString) {
-    res.status(401);
-    res.end();
+    res.send(guestUserInfo);
     return;
   }
   const booksSession: BooksSession = JSON.parse(sessionString);
   if (!booksSession) {
-    res.status(401);
-    res.end();
+    res.send(guestUserInfo);
     return;
   }
   const userInfo: UserInfo = {
     email: booksSession.email,
+    isGuest: false,
   };
-  console.log(userInfo);
   res.send(userInfo);
 });
 

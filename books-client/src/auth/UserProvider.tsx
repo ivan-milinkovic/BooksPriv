@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { UserInfo } from "../model";
 import { useQuery } from "@tanstack/react-query";
@@ -11,8 +10,6 @@ type Props = {
 };
 
 const UserProvider = ({ children }: Props) => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-
   const userQuery = useQuery({
     queryKey: [GetUserInfoQuery],
     queryFn: async (): Promise<UserInfo | null> => {
@@ -33,14 +30,12 @@ const UserProvider = ({ children }: Props) => {
     retry: 0,
   });
 
+  if (userQuery.isLoading) return <>Checking user...</>;
+
   const newUserInfo = userQuery.data as UserInfo;
 
-  useEffect(() => {
-    setUserInfo(newUserInfo);
-  }, [newUserInfo]);
-
   return (
-    <UserContext.Provider value={userInfo}>{children}</UserContext.Provider>
+    <UserContext.Provider value={newUserInfo}>{children}</UserContext.Provider>
   );
 };
 

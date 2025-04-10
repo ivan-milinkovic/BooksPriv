@@ -28,7 +28,7 @@ const CartButton = ({ hover }: Props) => {
       </Link>
       {showPreview && (
         <div
-          className="absolute end-4 top-[36px] border subtle-background"
+          className="absolute end-14 top-[36px] border subtle-background"
           onMouseEnter={onHover}
           onMouseLeave={onHoverEnd}
         >

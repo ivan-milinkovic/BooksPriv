@@ -1,8 +1,13 @@
-import { Author, Book, Genre, User } from './model';
+import { Author, Book, Genre, User, UserInfo } from './model';
 
 export const adminUser: User = {
   email: 'admin@books',
   password: '123',
+};
+
+export const guestUserInfo: UserInfo = {
+  email: '',
+  isGuest: true,
 };
 
 const nonFictionGenres: Genre[] = [

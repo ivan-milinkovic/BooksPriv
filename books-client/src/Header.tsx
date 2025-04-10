@@ -5,7 +5,7 @@ import { useUserInfo } from "./auth/useUserInfo";
 
 const Header = () => {
   const userInfo = useUserInfo();
-  const isLoggedIn: boolean = !!userInfo;
+  const isLoggedIn: boolean = !userInfo.isGuest;
 
   return (
     <header className="flex flex-row justify-between m-4">
@@ -13,21 +13,26 @@ const Header = () => {
       <Link to="/" className="text-2xl">
         Books
       </Link>
-      <div>
+      <div className="flex flex-row gap-2 items-baseline">
         {isLoggedIn ? (
           <>
             <span>{userInfo?.email}</span>
+            <span className="">
+              <CartButton hover={true} />
+            </span>
             <Link to="/admin" className="">
               Admin
             </Link>
-            <Logout />
+            <span className="">
+              <Logout />
+            </span>
           </>
         ) : (
           <>
-            <span className="ms-2">
+            <span className="">
               <CartButton hover={true} />
             </span>
-            <Link to="/login" className="ms-2">
+            <Link to="/login" className="">
               Login
             </Link>
           </>

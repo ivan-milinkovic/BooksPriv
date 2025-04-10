@@ -39,4 +39,5 @@ export type Cursor = {
 
 export type UserInfo = {
   email: string;
+  isGuest: boolean;
 };

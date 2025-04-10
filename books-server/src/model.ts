@@ -48,4 +48,5 @@ export type User = {
 
 export type UserInfo = {
   email: string;
+  isGuest: boolean;
 };
