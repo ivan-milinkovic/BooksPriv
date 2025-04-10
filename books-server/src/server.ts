@@ -10,6 +10,7 @@ import {
   books,
   childrenGenres,
   guestUserInfo,
+  setBooks,
 } from './data';
 import { BooksResponse, BooksSession, Cursor, Genres, UserInfo } from './model';
 var createError = require('http-errors');
@@ -159,6 +160,18 @@ app.get('/books/:bookId', async (req: Request, res: Response) => {
   }
   res.status(200);
   res.send(book);
+});
+
+app.delete('/books', async (req: Request, res: Response) => {
+  const ids = req.body as number[];
+  if (!ids) {
+    res.status(400);
+    res.end();
+    return;
+  }
+  setBooks(books.filter((b) => !ids.includes(b.id)));
+  res.status(200);
+  res.end();
 });
 
 app.use(function (req: Request, res: Response, next: NextFunction) {

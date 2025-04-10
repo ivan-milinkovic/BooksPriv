@@ -66,7 +66,7 @@ function randomSlice1<T>(array: T[]): T[] {
   return array.slice(start, end);
 }
 
-const books = bookIndices.map((i): Book => {
+let books = bookIndices.map((i): Book => {
   // find radnom authors for a book
   // const start = Math.random() * authors.length;
   // const len = Math.random() * 5;
@@ -98,4 +98,8 @@ const books = bookIndices.map((i): Book => {
   };
 });
 
-export { authors, books, childrenGenres, adultGenres };
+function setBooks(newBooks: Book[]) {
+  books = newBooks;
+}
+
+export { authors, books, childrenGenres, adultGenres, setBooks };

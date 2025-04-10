@@ -1,12 +1,19 @@
+import { ChangeEvent } from "react";
 import { Author, Book } from "../model";
 
 type Props = {
   books: Book[];
+  onBookSelected: (bookId: number, isSelected: boolean) => void;
 };
 
-const AdminBookList = ({ books }: Props) => {
+const AdminBookList = ({ books, onBookSelected }: Props) => {
   function formatAuthors(authors: Author[]): string {
     return authors.map((a) => a.name).join(", ");
+  }
+
+  function onCheckbox(event: ChangeEvent<HTMLInputElement>, bookId: number) {
+    const isChecked = event.target.checked;
+    onBookSelected(bookId, isChecked);
   }
 
   return (
@@ -14,28 +21,30 @@ const AdminBookList = ({ books }: Props) => {
       <table className="table-fixed border-separate border-spacing-4">
         <thead>
           <tr className="table-row">
-            <th className="table-cell">ID</th>
-            <th className="table-cell">ISBN</th>
-            <th className="table-cell">Title</th>
-            <th className="table-cell">Authors</th>
-            <th className="table-cell">Publish Date</th>
-            <th className="table-cell">Actions</th>
+            <th>ID</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Publish Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {books.map((book) => (
             <tr key={book.id} className="table-row">
-              <td className="table-cell">{book.id}</td>
-              <td className="table-cell">{book.isbn}</td>
-              <td className="table-cell">{book.title}</td>
-              <td className="table-cell max-w-[300px]">
-                {formatAuthors(book.authors)}
-              </td>
-              <td className="table-cell">{book.publishDate}</td>
-              <td className="table-cell">
+              <td>{book.id}</td>
+              <td>{book.isbn}</td>
+              <td>{book.title}</td>
+              <td className="max-w-[300px]">{formatAuthors(book.authors)}</td>
+              <td>{book.publishDate}</td>
+              <td>
                 <div>
                   <button className="link">✎</button>
-                  <button className="link ms-4">x</button>
+                  <input
+                    type="checkbox"
+                    onChange={(e) => onCheckbox(e, book.id)}
+                    className="link ms-4"
+                  />
                 </div>
               </td>
             </tr>
