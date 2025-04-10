@@ -17,16 +17,18 @@ export const BookCard = ({ book }: Props) => {
     return cartState.books.findIndex((b) => b.id === book.id) !== -1;
   }, [cartState]);
 
-  const bgImage = `bg-[url(${proxy + book.image})]`;
+  const bgImage = proxy + book.image;
+  // const bgImageCss = `bg-[url(${proxy + book.image})]`;
 
   return (
     <div
       className={
-        "rounded-3xl subtle-background w-[200px] h-[200px] p-4 overflow-clip bg-cover " +
-        bgImage
+        "rounded-3xl subtle-background w-[200px] h-[280px] p-0 overflow-clip bg-cover "
+        // + bgImageCss
       }
     >
-      <div className="text-shadow-lg/30 bg-stone-700/50 backdrop-blur-md rounded-2xl">
+      {book.image && <img src={bgImage} alt="" className="rounded-t-2xl" />}
+      <div className="text-shadow-lg/30 backdrop-blur-md rounded-2xl p-2">
         <Link to={`/books/${book.id}`} className="text-2xl">
           {book.title}
         </Link>
