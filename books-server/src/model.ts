@@ -25,3 +25,14 @@ export type Book = {
   image: string | null;
   description: string;
 };
+
+export type BooksResponse = {
+  pageIndex: number;
+  pageSize: number;
+  books: Book[];
+};
+
+export type Cursor = {
+  pageIndex: number;
+  pageSize: number;
+};

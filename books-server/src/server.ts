@@ -4,7 +4,7 @@ import logger from 'morgan';
 // import http from 'http';
 import { Request, Response, NextFunction } from 'express';
 import { adultGenres, authors, books, childrenGenres } from './data';
-import { Genres } from './model';
+import { BooksResponse, Cursor, Genres } from './model';
 var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -38,6 +38,57 @@ app.get('/genres', async (req: Request, res: Response) => {
 app.get('/books', async (req: Request, res: Response) => {
   res.status(200);
   res.send(books);
+});
+
+app.get('/bookspage', async (req: Request, res: Response) => {
+  const pageIndex = Number(req.query.pageIndex);
+  const pageSize = Number(req.query.pageSize);
+  if (Number.isNaN(pageIndex) || Number.isNaN(pageSize)) {
+    res.status(400);
+    res.end();
+    return;
+  }
+
+  const start = pageIndex * pageSize;
+  const resBooks = books.slice(start, start + pageSize);
+
+  const booksResponse: BooksResponse = {
+    pageIndex: pageIndex,
+    pageSize: resBooks.length,
+    books: resBooks,
+  };
+
+  res.status(200);
+  res.send(booksResponse);
+});
+
+app.get('/bookspage-cursor', async (req: Request, res: Response) => {
+  let nextCursor: Cursor;
+  if (req.query.cursor) {
+    const inEncodedJsonCursor = req.query.cursor as string;
+    const inJsonCursor = decodeURIComponent(inEncodedJsonCursor);
+    const inCursor = JSON.parse(inJsonCursor) as Cursor;
+    console.log('query cursor: ', inCursor);
+
+    const dir = req.query.dir;
+    const step = dir === 'prev' ? -1 : 1;
+
+    nextCursor = {
+      pageIndex: inCursor.pageIndex + step,
+      pageSize: inCursor.pageSize,
+    };
+  } else {
+    nextCursor = {
+      pageIndex: 0,
+      pageSize: 10,
+    };
+  }
+
+  const json = JSON.stringify(nextCursor);
+  const enc = encodeURIComponent(json);
+
+  res.status(200);
+  res.send(enc);
 });
 
 app.get('/books/:bookId', async (req: Request, res: Response) => {

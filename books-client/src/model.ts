@@ -25,3 +25,9 @@ export type Book = {
   image?: string;
   description: string;
 };
+
+export type BooksResponse = {
+  pageIndex: number;
+  pageSize: number;
+  books: Book[];
+};
