@@ -111,6 +111,7 @@ const AdminBooks = () => {
           <AdminAddBook
             handleClose={() => {
               setShowAddBook(false);
+              booksQuery.refetch();
             }}
           />
         </Modal>

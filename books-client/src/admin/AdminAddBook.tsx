@@ -9,6 +9,7 @@ type Inputs = {
   title: string;
   isbn: string;
   price: number;
+  quantity: number;
   publishDate: string;
   pageCount: number;
   genres: string; // comma separated genre ids, id = genre name
@@ -49,6 +50,7 @@ const AdminAddBook = ({ handleClose }: Props) => {
       headers: { "Content-Type": "multipart/form-data" },
       data: formData,
     });
+    handleClose();
   }
 
   return (
@@ -108,7 +110,26 @@ const AdminAddBook = ({ handleClose }: Props) => {
             {...register("price", { required: true })}
           />
           <div className="table-cell">
-            {errors.isbn && <div className="error-text">Required field</div>}
+            {errors.price && <div className="error-text">Required field</div>}
+          </div>
+        </div>
+        {/* Quantity */}
+        <div className="table-row">
+          <label htmlFor="price" className="table-cell">
+            Quantity
+          </label>
+          <input
+            type="number"
+            id="quantity"
+            placeholder="quantity"
+            className="table-cell"
+            defaultValue="20"
+            {...register("quantity", { required: true })}
+          />
+          <div className="table-cell">
+            {errors.quantity && (
+              <div className="error-text">Required field</div>
+            )}
           </div>
         </div>
         {/* Publish Date */}

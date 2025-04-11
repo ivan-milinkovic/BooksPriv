@@ -47,6 +47,7 @@ const adultGenres: Genre[] = [
 const authorIndices = Array.from({ length: 5 }, (val, index) => index);
 const authors = authorIndices.map((i): Author => {
   return {
+    id: i,
     name: `Author ${i}`,
     bio: `Biography ${i}`,
     dateOfBirth: new Date(1980, i, 1),

@@ -1,4 +1,5 @@
 export type Author = {
+  id: number;
   name: string;
   bio: string;
   dateOfBirth: Date;

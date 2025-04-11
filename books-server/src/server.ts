@@ -12,7 +12,14 @@ import {
   guestUserInfo,
   setBooks,
 } from './data';
-import { BooksResponse, BooksSession, Cursor, Genres, UserInfo } from './model';
+import {
+  Book,
+  BooksResponse,
+  BooksSession,
+  Cursor,
+  Genres,
+  UserInfo,
+} from './model';
 var createError = require('http-errors');
 // var path = require('path');
 import path from 'node:path';
@@ -182,12 +189,12 @@ app.get('/books/:bookId', async (req: Request, res: Response) => {
 type CreateBookDto = {
   title: string;
   isbn: string;
-  price: number;
-  quantity: number;
+  price: string;
+  quantity: string;
   publishDate: Date;
   pageCount: number;
-  genres: string[]; // genre ids, id = genre name
-  authors: number[]; // author ids
+  genres: string; // comma separated genre ids, id = genre name
+  authors: string; // comma separated  author ids
   forChildren: boolean;
   description: string;
 };
@@ -196,11 +203,34 @@ app.post(
   '/books',
   multerUploadBookImage.single('image'),
   async (req: Request, res: Response) => {
+    const inputs = req.body as CreateBookDto;
+    const genres = inputs.genres.split(',').map((e) => e.trim());
+    const authorIds = inputs.authors.split(',').map((e) => Number(e.trim()));
+    let bookAuthors = authors.filter((a) => authorIds.includes(a.id));
+
+    const newBook: Book = {
+      id: books[books.length - 1].id + 1,
+      title: inputs.title,
+      isbn: inputs.isbn,
+      price: Number(inputs.price),
+      quantity: Number(inputs.quantity),
+      publishDate: new Date(inputs.publishDate),
+      pageCount: inputs.pageCount,
+      genres: genres,
+      authors: bookAuthors,
+      forChildren: inputs.forChildren,
+      image: req.file ? '/public/images/' + req.file.filename : null,
+      description: inputs.description,
+    };
+
+    setBooks([...books, newBook]);
+
     console.log(req.body);
     console.log(req.file);
     res.end();
   },
 );
+
 /*
 {
   fieldname: 'image',
