@@ -7,8 +7,6 @@ https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_l
 - admin add author
 - publish date react date picker
 - publish date cannot be in the future
-- don't assign placeholder images, add them at endpoint
-- delete images when deleting books, don't delete placeholders
 
 # Run
 
