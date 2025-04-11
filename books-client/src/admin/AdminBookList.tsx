@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
 import { Author, Book } from "../model";
+import { Link } from "react-router";
 
 type Props = {
   books: Book[];
@@ -32,7 +33,11 @@ const AdminBookList = ({ books, onBookSelected }: Props) => {
         <tbody>
           {books.map((book) => (
             <tr key={book.id} className="table-row">
-              <td>{book.id}</td>
+              <td>
+                <Link to={"/books/" + book.id} className="link" target="_blank">
+                  {book.id}
+                </Link>
+              </td>
               <td>{book.isbn}</td>
               <td>{book.title}</td>
               <td className="max-w-[300px]">{formatAuthors(book.authors)}</td>

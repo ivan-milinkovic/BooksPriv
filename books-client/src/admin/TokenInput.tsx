@@ -12,7 +12,6 @@ type Props = {
 };
 
 const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
-  console.log("redraw", tokens[0].name);
   const allIds = tokens.map((t) => t.id);
   const [selectedIds, setSelectedIds] = useState<string[]>(
     allIds.filter((id) => initialSelection.includes(id))

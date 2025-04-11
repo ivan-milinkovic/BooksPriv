@@ -7,7 +7,7 @@ import { useState } from "react";
 type Props = {
   authors: Author[];
   genres: Genres;
-  handleClose: () => void;
+  handleClose: (added: boolean) => void;
 };
 
 type Inputs = {
@@ -76,7 +76,7 @@ const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
       headers: { "Content-Type": "multipart/form-data" },
       data: formData,
     });
-    handleClose();
+    handleClose(true);
   }
 
   function handleAuthorIds(newAuthorIds: string[]) {
@@ -95,7 +95,12 @@ const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
     <div onSubmit={handleSubmit(submit)} className="subtle-background p-4">
       <span className="w-full">
         <span className="text-2xl">Add Book</span>
-        <button onClick={handleClose} className="secondary-button float-end">
+        <button
+          onClick={() => {
+            handleClose(false);
+          }}
+          className="secondary-button float-end"
+        >
           X
         </button>
       </span>

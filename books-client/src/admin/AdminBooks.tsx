@@ -114,13 +114,14 @@ const AdminBooks = () => {
         url: "/books",
         data: JSON.stringify(ids),
       });
-      booksQuery.refetch();
     },
   });
 
   async function confirmDeletion() {
     if (confirm(`Delete ${formattedSelection}?`)) {
       await deleteMutation.mutateAsync(selection);
+      booksQuery.refetch();
+      setSelection([]);
     }
   }
 
@@ -131,9 +132,9 @@ const AdminBooks = () => {
           <AdminAddBook
             authors={authors}
             genres={genres}
-            handleClose={() => {
+            handleClose={(added: boolean) => {
               setShowAddBook(false);
-              booksQuery.refetch();
+              if (added) booksQuery.refetch();
             }}
           />
         </Modal>
