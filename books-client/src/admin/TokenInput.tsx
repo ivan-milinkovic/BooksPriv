@@ -12,6 +12,7 @@ type Props = {
 };
 
 const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
+  console.log("redraw", tokens[0].name);
   const allIds = tokens.map((t) => t.id);
   const [selectedIds, setSelectedIds] = useState<string[]>(
     allIds.filter((id) => initialSelection.includes(id))
@@ -21,7 +22,6 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
   );
   const [suggestions, setSuggestions] = useState<TokenizedInputToken[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [_output, setOutput] = useState<string>("");
 
   function addSelection(tokenId: string) {
     const newSelectedIds = [...selectedIds, tokenId];
@@ -38,11 +38,11 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
 
   const selectedTokens = useMemo(() => {
     return tokens.filter((t) => selectedIds.includes(t.id));
-  }, [selectedIds]);
+  }, [selectedIds, tokens]);
 
   const remainingTokens = useMemo(() => {
     return tokens.filter((t) => remainingIds.includes(t.id));
-  }, [remainingIds]);
+  }, [remainingIds, tokens]);
 
   useEffect(() => {
     handleOutput(selectedIds);
@@ -59,7 +59,7 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
       })
       .slice(0, 5);
     setSuggestions(newSuggestions);
-  }, [search]);
+  }, [search, tokens]);
 
   return (
     <span>

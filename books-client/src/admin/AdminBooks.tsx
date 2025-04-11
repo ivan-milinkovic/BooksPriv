@@ -5,7 +5,7 @@ import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { Author, BooksResponse, Cursor } from "../model";
+import { Author, BooksResponse, Cursor, Genres } from "../model";
 import { apiAxios } from "../axios";
 import { AdminGetBooksQuery } from "../queryKeys";
 import AdminBookList from "./AdminBookList";
@@ -74,6 +74,14 @@ const AdminBooks = () => {
     },
   });
 
+  const genresQuery = useSuspenseQuery({
+    queryKey: ["GetGenresQuery"],
+    queryFn: async () => {
+      const res = await apiAxios.get("/genres");
+      return res.data as Genres;
+    },
+  });
+
   const booksData = booksQuery.data;
   if (!booksData) return <>Error</>; // todo: throw error
 
@@ -82,6 +90,7 @@ const AdminBooks = () => {
   }, [booksData]);
 
   const authors = authorsQuery.data as Author[];
+  const genres = genresQuery.data as Genres;
 
   function onBookSelected(bookId: number, isSelected: boolean) {
     let newSelection: number[];
@@ -121,6 +130,7 @@ const AdminBooks = () => {
         <Modal>
           <AdminAddBook
             authors={authors}
+            genres={genres}
             handleClose={() => {
               setShowAddBook(false);
               booksQuery.refetch();

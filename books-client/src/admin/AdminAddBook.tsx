@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import { apiAxios } from "../axios";
-import { Author } from "../model";
+import { Author, Genre, Genres } from "../model";
 import TokenizedInput from "./TokenInput";
 import { useState } from "react";
 
 type Props = {
   authors: Author[];
+  genres: Genres;
   handleClose: () => void;
 };
 
@@ -23,15 +24,30 @@ type Inputs = {
   description: string;
 };
 
-const AdminAddBook = ({ authors, handleClose }: Props) => {
+const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<Inputs>();
 
-  const [authorIds, setAuthorIds] = useState("");
+  const [selectedAuthorIds, setSelectedAuthorIds] = useState("");
+  const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
+    genres.adult
+  );
+  const [selectedGenreIds, setSelectedGenreIds] = useState("");
+
+  watch((value, _info) => {
+    if (value.forChildren === true) {
+      // console.log("children");
+      setAppropriateGenres(genres.children);
+    } else {
+      // console.log("adult");
+      setAppropriateGenres(genres.adult);
+    }
+  });
 
   async function submit(inputs: Inputs) {
     console.log(inputs.authors);
@@ -65,8 +81,14 @@ const AdminAddBook = ({ authors, handleClose }: Props) => {
 
   function handleAuthorIds(newAuthorIds: string[]) {
     const newCommaSeparatedAuthorIds = newAuthorIds.join(",");
-    setAuthorIds(newCommaSeparatedAuthorIds);
+    setSelectedAuthorIds(newCommaSeparatedAuthorIds);
     setValue("authors", newCommaSeparatedAuthorIds, { shouldValidate: true });
+  }
+
+  function handleGenreIds(newGenreIds: string[]) {
+    const newCommaSeparatedGenreIds = newGenreIds.join(",");
+    setSelectedGenreIds(newCommaSeparatedGenreIds);
+    setValue("genres", newCommaSeparatedGenreIds, { shouldValidate: true });
   }
 
   return (
@@ -191,14 +213,27 @@ const AdminAddBook = ({ authors, handleClose }: Props) => {
           <label htmlFor="genres" className="table-cell">
             Genres
           </label>
-          <input
-            type="text"
-            id="genres"
-            placeholder="genres"
-            className="table-cell"
-            defaultValue="Picture Books"
-            {...register("genres", { required: true })}
-          />
+          <div className="table-cell">
+            <TokenizedInput
+              tokens={appropriateGenres.map((g) => {
+                // console.log(appropriateGenres[0]);
+                return {
+                  id: g,
+                  name: g,
+                };
+              })}
+              initialSelection={[]}
+              handleOutput={(newGenreIds) => handleGenreIds(newGenreIds)}
+            />
+            <input
+              type="text"
+              id="genres"
+              value={selectedGenreIds}
+              {...register("genres", { required: true })}
+              className="hidden"
+            />
+          </div>
+
           <div className="table-cell">
             {errors.pageCount && (
               <div className="error-text">Required field</div>
@@ -223,8 +258,8 @@ const AdminAddBook = ({ authors, handleClose }: Props) => {
             />
             <input
               type="text"
-              id="bridge-input"
-              value={authorIds}
+              id="authors"
+              value={selectedAuthorIds}
               {...register("authors", { required: true })}
               className="hidden"
             />
