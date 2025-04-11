@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { apiAxios } from "../axios";
 
 type Props = {
   handleClose: () => void;
@@ -8,13 +9,12 @@ type Inputs = {
   title: string;
   isbn: string;
   price: number;
-  quantity: number;
-  publishDate: Date;
+  publishDate: string;
   pageCount: number;
-  genres: string[]; // genre ids, id = genre name
-  authors: number[]; // author ids
+  genres: string; // comma separated genre ids, id = genre name
+  authors: string; // comma separated author ids
   forChildren: boolean;
-  image?: File;
+  image?: FileList;
   description: string;
 };
 
@@ -25,8 +25,30 @@ const AdminAddBook = ({ handleClose }: Props) => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  function submit(inputs: Inputs) {
+  async function submit(inputs: Inputs) {
     console.log(inputs);
+    const formData = new FormData();
+    formData.append("title", inputs.title);
+    formData.append("isbn", inputs.isbn);
+    formData.append("price", inputs.price.toString());
+    formData.append("publishDate", inputs.publishDate);
+    formData.append("pageCount", inputs.pageCount.toString());
+    formData.append("genres", inputs.genres);
+    formData.append("authors", inputs.authors);
+    formData.append("forChildren", inputs.forChildren ? "true" : "false");
+    console.log(inputs.image);
+    if (inputs.image && inputs.image.length == 1)
+      formData.append("image", inputs.image[0]);
+    formData.append("description", inputs.description);
+
+    console.log(formData);
+
+    await apiAxios({
+      method: "post",
+      url: "books",
+      headers: { "Content-Type": "multipart/form-data" },
+      data: formData,
+    });
   }
 
   return (
@@ -37,7 +59,7 @@ const AdminAddBook = ({ handleClose }: Props) => {
           X
         </button>
       </span>
-      <form className="table-auto">
+      <form className="table-auto border-spacing-2">
         {/* Title */}
         <div className="table-row">
           <label htmlFor="title" className="table-cell">
@@ -48,21 +70,29 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="title"
             placeholder="title"
             className="table-cell"
+            defaultValue="Book X"
             {...register("title", { required: true })}
           />
+          <div className="table-cell">
+            {errors.title && <div className="error-text">Required field</div>}
+          </div>
         </div>
         {/* ISBN */}
         <div className="table-row">
           <label htmlFor="isbn" className="table-cell">
-            Title
+            ISBN
           </label>
           <input
             type="text"
             id="isbn"
             placeholder="isbn"
             className="table-cell"
+            defaultValue="0-1645-2527-0"
             {...register("isbn", { required: true })}
           />
+          <div className="table-cell">
+            {errors.isbn && <div className="error-text">Required field</div>}
+          </div>
         </div>
         {/* Price */}
         <div className="table-row">
@@ -74,8 +104,12 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="price"
             placeholder="price"
             className="table-cell"
+            defaultValue="10"
             {...register("price", { required: true })}
           />
+          <div className="table-cell">
+            {errors.isbn && <div className="error-text">Required field</div>}
+          </div>
         </div>
         {/* Publish Date */}
         <div className="table-row">
@@ -87,8 +121,14 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="publishDate"
             placeholder="publishDate"
             className="table-cell"
+            defaultValue="2000-01-01"
             {...register("publishDate", { required: true })}
           />
+          <div className="table-cell">
+            {errors.publishDate && (
+              <div className="error-text">Required field</div>
+            )}
+          </div>
         </div>
         {/* Page Count */}
         <div className="table-row">
@@ -100,8 +140,14 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="pageCount"
             placeholder="pageCount"
             className="table-cell"
+            defaultValue="200"
             {...register("pageCount", { required: true })}
           />
+          <div className="table-cell">
+            {errors.pageCount && (
+              <div className="error-text">Required field</div>
+            )}
+          </div>
         </div>
         {/* Genres */}
         <div className="table-row">
@@ -113,8 +159,14 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="genres"
             placeholder="genres"
             className="table-cell"
+            defaultValue="Picture Books"
             {...register("genres", { required: true })}
           />
+          <div className="table-cell">
+            {errors.pageCount && (
+              <div className="error-text">Required field</div>
+            )}
+          </div>
         </div>
         {/* Authors */}
         <div className="table-row">
@@ -126,8 +178,12 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="authors"
             placeholder="authors"
             className="table-cell"
+            defaultValue="0, 1"
             {...register("authors", { required: true })}
           />
+          <div className="table-cell">
+            {errors.authors && <div className="error-text">Required field</div>}
+          </div>
         </div>
         {/* For Children */}
         <div className="table-row">
@@ -139,8 +195,10 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="forChildren"
             placeholder="forChildren"
             className="table-cell"
+            defaultChecked={false}
             {...register("forChildren")}
           />
+          <div className="table-cell"></div>
         </div>
         {/* Description */}
         <div className="table-row">
@@ -151,8 +209,10 @@ const AdminAddBook = ({ handleClose }: Props) => {
             id="description"
             placeholder="description"
             className="table-cell"
+            defaultValue="Etiam lobortis, libero id suscipit commodo."
             {...register("description")}
           />
+          <div className="table-cell"></div>
         </div>
         {/* Image */}
         <div className="table-row">
@@ -163,8 +223,10 @@ const AdminAddBook = ({ handleClose }: Props) => {
             type="file"
             id="image"
             className="table-cell"
+            accept="image/png, image/jpg, image/jpeg, image/webp"
             {...register("image")}
           />
+          <div className="table-cell"></div>
         </div>
         {/* Submit */}
         <div className="table-row">
@@ -172,6 +234,7 @@ const AdminAddBook = ({ handleClose }: Props) => {
           <span className="table-cell">
             <button className="primary-button">Submit</button>
           </span>
+          <div className="table-cell"></div>
         </div>
       </form>
     </div>

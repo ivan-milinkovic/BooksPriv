@@ -84,7 +84,7 @@ let books = bookIndices.map((i): Book => {
   return {
     id: i,
     title: `Book ${i}`,
-    isbn: `978-3-16-148410-${i}`,
+    isbn: `0-1645-2527-${i}`,
     price: Math.floor(Math.random() * 90 + 10),
     quantity: 30,
     publishDate: new Date(2020, i % 12, i % 28),

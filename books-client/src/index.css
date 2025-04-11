@@ -18,6 +18,7 @@
   --text-color: var(--color-white);
   --text-subtle-color: var(--color-gray-300);
   --subtle-background-color: rgb(48, 56, 69);
+  --error-color: var(--color-orange-300);
 }
 
 html,
@@ -66,4 +67,8 @@ body {
 
 .subtle-background {
   background-color: var(--subtle-background-color);
+}
+
+.error-text {
+  color: var(--error-color);
 }

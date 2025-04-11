@@ -62,7 +62,7 @@ const Login = () => {
             aria-invalid={errors.email ? "true" : "false"}
           />
           {errors.email && (
-            <div className="text-orange-300">{errors.email.message}</div>
+            <div className="error-text">{errors.email.message}</div>
           )}
         </div>
         <div className="table-row">
@@ -82,10 +82,10 @@ const Login = () => {
             aria-invalid={errors.email ? "true" : "false"}
           />
           {errors.password && errors.password.type === "required" && (
-            <div className="text-orange-300">{errors.password.message}</div>
+            <div className="error-text">{errors.password.message}</div>
           )}
           {errors.password && errors.password.type === "minLength" && (
-            <div className="text-orange-300 w-[200px]">
+            <div className="error-text w-[200px]">
               Password needs to be at least 3 characters long
             </div>
           )}

@@ -1,6 +1,7 @@
 import serverConfig from './config';
 import express from 'express';
 import logger from 'morgan';
+import multer from 'multer';
 import { Request, Response, NextFunction } from 'express';
 import {
   adminUser,
@@ -13,9 +14,26 @@ import {
 } from './data';
 import { BooksResponse, BooksSession, Cursor, Genres, UserInfo } from './model';
 var createError = require('http-errors');
-var path = require('path');
+// var path = require('path');
+import path from 'node:path';
 var cookieParser = require('cookie-parser');
 const rootPath = path.join(__dirname, '../');
+
+const multerBookImageStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, rootPath + '/public/images');
+  },
+  filename: function (req, file, cb) {
+    const suffixStr = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const suffix = encodeURIComponent(suffixStr);
+    const name = file.fieldname + '-' + suffix;
+    const ext = path.extname(file.originalname);
+    let filename = name;
+    if (ext) filename += ext;
+    cb(null, filename);
+  },
+});
+const multerUploadBookImage = multer({ storage: multerBookImageStorage });
 
 var app = express();
 
@@ -160,6 +178,39 @@ app.get('/books/:bookId', async (req: Request, res: Response) => {
   res.status(200);
   res.send(book);
 });
+
+type CreateBookDto = {
+  title: string;
+  isbn: string;
+  price: number;
+  quantity: number;
+  publishDate: Date;
+  pageCount: number;
+  genres: string[]; // genre ids, id = genre name
+  authors: number[]; // author ids
+  forChildren: boolean;
+  description: string;
+};
+
+app.post(
+  '/books',
+  multerUploadBookImage.single('image'),
+  async (req: Request, res: Response) => {
+    console.log(req.body);
+    console.log(req.file);
+    res.end();
+  },
+);
+/*
+{
+  fieldname: 'image',
+  originalname: 'book-1283865_640.jpg',
+  encoding: '7bit',
+  mimetype: 'image/jpeg',
+  buffer: <Buffer ff d8 ff e0 00 10 4a  ... 47883 more bytes>,
+  size: 47933
+}
+*/
 
 app.delete('/books', async (req: Request, res: Response) => {
   const ids = req.body as number[];
