@@ -210,14 +210,6 @@ const AdminAddBook = ({ authors, handleClose }: Props) => {
           <label htmlFor="authors" className="table-cell">
             Authors
           </label>
-          {/* <input
-            type="text"
-            id="authors"
-            placeholder="authors"
-            className="table-cell"
-            defaultValue="0, 1"
-            {...register("authors", { required: true })}
-          /> */}
           <div className="table-cell">
             <TokenizedInput
               tokens={authors.map((a) => {
