@@ -225,8 +225,9 @@ app.post(
 
     setBooks([...books, newBook]);
 
-    console.log(req.body);
-    console.log(req.file);
+    // console.log(req.body);
+    // console.log(req.file);
+
     res.end();
   },
 );

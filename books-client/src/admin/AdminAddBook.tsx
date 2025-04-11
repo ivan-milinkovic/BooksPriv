@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
 import { apiAxios } from "../axios";
+import { Author } from "../model";
+import TokenizedInput from "./TokenInput";
+import { useState } from "react";
 
 type Props = {
+  authors: Author[];
   handleClose: () => void;
 };
 
@@ -13,21 +17,25 @@ type Inputs = {
   publishDate: string;
   pageCount: number;
   genres: string; // comma separated genre ids, id = genre name
-  authors: string; // comma separated author ids
+  authors: string; // author ids
   forChildren: boolean;
   image?: FileList;
   description: string;
 };
 
-const AdminAddBook = ({ handleClose }: Props) => {
+const AdminAddBook = ({ authors, handleClose }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<Inputs>();
 
+  const [authorIds, setAuthorIds] = useState("");
+
   async function submit(inputs: Inputs) {
-    console.log(inputs);
+    console.log(inputs.authors);
+
     const formData = new FormData();
     formData.append("title", inputs.title);
     formData.append("isbn", inputs.isbn);
@@ -37,12 +45,14 @@ const AdminAddBook = ({ handleClose }: Props) => {
     formData.append("genres", inputs.genres);
     formData.append("authors", inputs.authors);
     formData.append("forChildren", inputs.forChildren ? "true" : "false");
-    console.log(inputs.image);
+
+    // console.log(inputs.image);
+
     if (inputs.image && inputs.image.length == 1)
       formData.append("image", inputs.image[0]);
     formData.append("description", inputs.description);
 
-    console.log(formData);
+    // console.log(formData);
 
     await apiAxios({
       method: "post",
@@ -51,6 +61,12 @@ const AdminAddBook = ({ handleClose }: Props) => {
       data: formData,
     });
     handleClose();
+  }
+
+  function handleAuthorIds(newAuthorIds: string[]) {
+    const newCommaSeparatedAuthorIds = newAuthorIds.join(",");
+    setAuthorIds(newCommaSeparatedAuthorIds);
+    setValue("authors", newCommaSeparatedAuthorIds, { shouldValidate: true });
   }
 
   return (
@@ -194,14 +210,33 @@ const AdminAddBook = ({ handleClose }: Props) => {
           <label htmlFor="authors" className="table-cell">
             Authors
           </label>
-          <input
+          {/* <input
             type="text"
             id="authors"
             placeholder="authors"
             className="table-cell"
             defaultValue="0, 1"
             {...register("authors", { required: true })}
-          />
+          /> */}
+          <div className="table-cell">
+            <TokenizedInput
+              tokens={authors.map((a) => {
+                return {
+                  id: a.id.toString(),
+                  name: a.name,
+                };
+              })}
+              initialSelection={[]}
+              handleOutput={(newAuthorIds) => handleAuthorIds(newAuthorIds)}
+            />
+            <input
+              type="text"
+              id="bridge-input"
+              value={authorIds}
+              {...register("authors", { required: true })}
+              className="hidden"
+            />
+          </div>
           <div className="table-cell">
             {errors.authors && <div className="error-text">Required field</div>}
           </div>
