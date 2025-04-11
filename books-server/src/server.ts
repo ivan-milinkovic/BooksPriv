@@ -2,6 +2,7 @@ import serverConfig from './config';
 import express from 'express';
 import logger from 'morgan';
 import multer from 'multer';
+import fs from 'node:fs';
 import { Request, Response, NextFunction } from 'express';
 import {
   adminUser,
@@ -113,6 +114,7 @@ app.get('/genres', async (req: Request, res: Response) => {
 
 app.get('/books', async (req: Request, res: Response) => {
   res.status(200);
+  tryApplyImage(books);
   res.send(books);
 });
 
@@ -127,6 +129,7 @@ app.get('/bookspage', async (req: Request, res: Response) => {
 
   const start = pageIndex * pageSize;
   const resBooks = books.slice(start, start + pageSize);
+  tryApplyImage(resBooks);
 
   const booksResponse: BooksResponse = {
     pageIndex: pageIndex,
@@ -177,14 +180,24 @@ app.get('/books/:bookId', async (req: Request, res: Response) => {
     return;
   }
   const book = books.find((b) => b.id === bookIdNum);
-  if (!bookId) {
+  if (!book) {
     res.status(404);
     res.end();
     return;
   }
+  tryApplyImage([book]);
   res.status(200);
   res.send(book);
 });
+
+function tryApplyImage(books: Book[]) {
+  for (let b of books) {
+    if (!b.image) {
+      const placeholderNum = Math.random() < 0.5 ? 1 : 2;
+      b.image = `/public/images/placeholder${placeholderNum}.jpg`;
+    }
+  }
+}
 
 type CreateBookDto = {
   title: string;
@@ -250,7 +263,17 @@ app.delete('/books', async (req: Request, res: Response) => {
     res.end();
     return;
   }
+  const entities = books.filter((b) => ids.includes(b.id));
+  for (const book of entities) {
+    if (book.image && !book.image.includes('placeholder')) {
+      const imagePath = rootPath + book.image;
+      fs.unlink(imagePath, (err) => {
+        if (err) console.error(`Failed to delete image: ${imagePath}`);
+      });
+    }
+  }
   setBooks(books.filter((b) => !ids.includes(b.id)));
+
   res.status(200);
   res.end();
 });

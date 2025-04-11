@@ -68,7 +68,7 @@ function randomSlice1<T>(array: T[]): T[] {
 }
 
 let books = bookIndices.map((i): Book => {
-  // find radnom authors for a book
+  // find random authors for a book
   // const start = Math.random() * authors.length;
   // const len = Math.random() * 5;
   // const someAuthors = authors.slice(start, start + len);
@@ -93,7 +93,7 @@ let books = bookIndices.map((i): Book => {
     genres: genres,
     authors: someAuthors,
     forChildren: forChildren,
-    image: `/public/images/placeholder${placeholderNum}.jpg`,
+    image: null,
     description:
       'Praesent pulvinar condimentum scelerisque. Proin vitae sapien risus. Sed consequat ligula tortor, in porta est commodo nec. Etiam lobortis, libero id suscipit commodo, nisi lacus rhoncus nibh, non volutpat eros nulla faucibus mi. Duis risus libero, tempor at pulvinar ut, egestas iaculis orci. Quisque rutrum congue turpis, ut scelerisque leo lobortis vitae. Sed gravida porttitor vehicula. Pellentesque risus sem, pulvinar fermentum lorem nec, ullamcorper mollis lorem. Nulla in aliquet sem.',
   };
