@@ -1,7 +1,6 @@
 import serverConfig from './config';
 import express from 'express';
 import logger from 'morgan';
-// import http from 'http';
 import { Request, Response, NextFunction } from 'express';
 import {
   adminUser,
@@ -186,33 +185,3 @@ app.listen(serverConfig.port, (err?: Error) => {
   err && console.error(`error: ${err}`);
   console.log(`Listening on port: ${serverConfig.port}`);
 });
-
-/*
-app.set('port', serverConfig.port);
-var server = http.createServer(app);
-
-server.on('error', function onError(error: any) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  switch (error.code) {
-    case 'EACCES':
-      console.error(serverConfig.port + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(serverConfig.port + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-});
-
-server.on('listening', function onListening() {
-  console.log('Listening on ' + serverConfig.port);
-});
-
-server.listen(serverConfig.port);
-*/
