@@ -12,12 +12,14 @@ import BookDetails from "./books/BookDetails";
 import CartDetails from "./Cart/CartDetails";
 import CartProvider from "./Cart/CartProvider";
 import UserProvider from "./auth/UserProvider";
+import { ModalContainer } from "./modal/ModalContainer";
 
 const queryClient = new QueryClient();
 
 const Layout = () => {
   return (
     <div className="">
+      <ModalContainer />
       <QueryClientProvider client={queryClient}>
         <UserProvider>
           <CartProvider>

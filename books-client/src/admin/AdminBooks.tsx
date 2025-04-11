@@ -9,12 +9,15 @@ import { apiAxios } from "../axios";
 import { AdminGetBooksQuery } from "../queryKeys";
 import AdminBookList from "./AdminBookList";
 import { useMemo, useState } from "react";
+import { Modal } from "../modal/Modal";
+import AdminAddBook from "./AdminAddBook";
 
 const PageSize = 10;
 const MaxPages = 3;
 
 const AdminBooks = () => {
   const [selection, setSelection] = useState<number[]>([]);
+  const [showAddBook, setShowAddBook] = useState(false);
   const initialCursor: Cursor = {
     pageIndex: 0,
     pageSize: PageSize,
@@ -102,9 +105,30 @@ const AdminBooks = () => {
   }
 
   return (
-    <>
-      <div>
-        <span>Selected IDs: {formattedSelection}</span>
+    <div className="mt-4">
+      {showAddBook && (
+        <Modal>
+          <AdminAddBook
+            handleClose={() => {
+              setShowAddBook(false);
+            }}
+          />
+        </Modal>
+      )}
+      <div className="mb-4">
+        <button
+          onClick={() => {
+            setShowAddBook(true);
+          }}
+          className="secondary-button"
+        >
+          Add Book
+        </button>
+        <span className="mx-4">|</span>
+        <span>
+          Selected IDs: &nbsp;
+          <span>{formattedSelection}</span>
+        </span>
         <span>
           <button onClick={confirmDeletion} className="secondary-button ms-2">
             Delete
@@ -112,24 +136,24 @@ const AdminBooks = () => {
         </span>
       </div>
       {booksQuery.hasPreviousPage && (
-        <div>
+        <div className="text-center">
           <button
             disabled={
               !booksQuery.hasPreviousPage || booksQuery.isFetchingPreviousPage
             }
             onClick={() => booksQuery.fetchPreviousPage()}
-            className="secondary-button"
+            className="link"
           >
             Load Previous
           </button>
         </div>
       )}
       <AdminBookList books={books} onBookSelected={onBookSelected} />
-      <div className="mb-8">
+      <div className="mb-8 text-center">
         <button
           onClick={() => booksQuery.fetchNextPage()}
           disabled={!booksQuery.hasNextPage || booksQuery.isFetchingNextPage}
-          className="secondary-button"
+          className="link"
         >
           {booksQuery.isFetchingNextPage
             ? "Loading..."
@@ -138,7 +162,7 @@ const AdminBooks = () => {
             : "No more data"}
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -6,6 +6,10 @@ https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_l
 - admin add book modal
 - admin edit book
 - admin add author
+- genres picker
+- authors picker
+- publish date react date picker
+- publish date cannot be in the future
 
 # Run
 
