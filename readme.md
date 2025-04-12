@@ -7,7 +7,6 @@ https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_l
 - publish date cannot be in the future
 - infinite scroll and load
 - add filter to admin book list
-- book details publish date
 
 # Run
 

@@ -29,7 +29,7 @@ const BookDetails = () => {
   const imageUrl = book.image ? ApiUrl + book.image : "";
 
   return (
-    <div>
+    <div className="flex flex-row justify-center text-start">
       <div className="table-auto border-spacing-2 w-1/2">
         <div className="table-row">
           <span className="table-cell subtle-text">Title</span>
@@ -46,6 +46,10 @@ const BookDetails = () => {
         <div className="table-row">
           <span className="table-cell subtle-text">Genres</span>
           <span className="table-cell">{book.genres.join(", ")}</span>
+        </div>
+        <div className="table-row">
+          <span className="table-cell subtle-text">Publish Date</span>
+          <span className="table-cell">{book.publishDate}</span>
         </div>
         <div className="table-row">
           <span className="table-cell subtle-text">Description</span>
