@@ -10,6 +10,7 @@ import {
 } from "../queries/booksQuery";
 import { useAuthorsSuspenseQuery } from "../queries/authorsQuery";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
+import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -92,32 +93,22 @@ const AdminBooks = () => {
           </button>
         </span>
       </div>
-      {booksQuery.hasPreviousPage && (
-        <div className="text-center">
-          <button
-            disabled={
-              !booksQuery.hasPreviousPage || booksQuery.isFetchingPreviousPage
-            }
-            onClick={() => booksQuery.fetchPreviousPage()}
-            className="link"
-          >
-            Load Previous
-          </button>
-        </div>
-      )}
+
+      <div className="text-center">
+        <LoadPrevButton
+          hasMore={booksQuery.hasPreviousPage}
+          isFetching={booksQuery.isFetchingPreviousPage}
+          handleClick={() => booksQuery.fetchPreviousPage()}
+        />
+      </div>
+
       <AdminBookList books={books} onBookSelected={onBookSelected} />
       <div className="mb-8 text-center">
-        <button
-          onClick={() => booksQuery.fetchNextPage()}
-          disabled={!booksQuery.hasNextPage || booksQuery.isFetchingNextPage}
-          className="link"
-        >
-          {booksQuery.isFetchingNextPage
-            ? "Loading..."
-            : booksQuery.hasNextPage
-            ? "Load More"
-            : "No more data"}
-        </button>
+        <LoadNextButton
+          hasMore={booksQuery.hasNextPage}
+          isFetching={booksQuery.isFetchingNextPage}
+          handleClick={() => booksQuery.fetchNextPage()}
+        />
       </div>
     </div>
   );

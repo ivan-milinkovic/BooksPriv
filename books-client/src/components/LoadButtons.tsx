@@ -8,7 +8,7 @@ export function LoadPrevButton({ hasMore, isFetching, handleClick }: Props) {
   return (
     <button
       disabled={!hasMore || isFetching}
-      className="secondary-button"
+      className="link"
       onClick={() => handleClick()}
       hidden={!hasMore}
     >
@@ -22,7 +22,7 @@ export function LoadNextButton({ hasMore, isFetching, handleClick }: Props) {
     <button
       disabled={!hasMore || isFetching}
       onClick={() => handleClick()}
-      className="secondary-button"
+      className="link"
     >
       {isFetching ? "Loading..." : hasMore ? "Load More" : "No more to load"}
     </button>
