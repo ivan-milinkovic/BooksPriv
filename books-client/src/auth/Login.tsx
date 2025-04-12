@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { GetUserInfoQuery } from "../queries/queryKeys";
+import { useState } from "react";
 
 type Inputs = {
   email: string;
@@ -16,6 +17,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  const [message, setMessage] = useState("");
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const Login = () => {
     } catch (err) {
       const e = err as AxiosError;
       if (e.status === 401) {
+        setMessage("Could not log in");
       } else {
         throw err; // propagate all other errors
       }
@@ -92,6 +95,7 @@ const Login = () => {
         </div>
         <button className="primary-button">Log In</button>
       </form>
+      {message && <div className="error-text">{message}</div>}
     </>
   );
 };

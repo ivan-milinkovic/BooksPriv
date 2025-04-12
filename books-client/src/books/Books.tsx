@@ -13,12 +13,12 @@ const Books = () => {
     MaxPages
   );
 
-  const data = booksQuery.data;
-  if (!data) return <>Error</>; // todo: throw error
+  const booksData = booksQuery.data;
 
   const books = useMemo(() => {
-    return data.pages.flatMap((page) => page.books); // infinite query stores data per page, so flatten into one array
-  }, [data]);
+    if (!booksData) return [];
+    return booksData.pages.flatMap((page) => page.books); // infinite query stores data per page, so flatten into one array
+  }, [booksData]);
 
   return (
     <>

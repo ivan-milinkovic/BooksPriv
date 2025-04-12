@@ -1,6 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
 import { Author, Genres } from "../model/model";
-import { apiAxios } from "../axios";
 import { AdminGetBooksQuery } from "../queries/queryKeys";
 import AdminBookList from "./AdminBookList";
 import { useMemo, useState } from "react";
@@ -27,15 +25,16 @@ const AdminBooks = () => {
   );
   const authorsQuery = useAuthorsSuspenseQuery();
   const genresQuery = useGenresSuspenseQuery();
+  const deleteMutation = useDeleteBooksMutation();
 
   const booksData = booksQuery.data;
-  if (!booksData) return <>Error</>; // todo: throw error
-  const books = useMemo(() => {
-    return booksData.pages.flatMap((page) => page.books);
-  }, [booksData]);
-
   const authors = authorsQuery.data as Author[];
   const genres = genresQuery.data as Genres;
+
+  const books = useMemo(() => {
+    if (!booksData) return [];
+    return booksData.pages.flatMap((page) => page.books);
+  }, [booksData]);
 
   function onBookSelected(bookId: number, isSelected: boolean) {
     let newSelection: number[];
@@ -50,8 +49,6 @@ const AdminBooks = () => {
   const formattedSelection = useMemo(() => {
     return selection.join(", ");
   }, [selection]);
-
-  const deleteMutation = useDeleteBooksMutation();
 
   async function confirmDeletion() {
     if (confirm(`Delete ${formattedSelection}?`)) {

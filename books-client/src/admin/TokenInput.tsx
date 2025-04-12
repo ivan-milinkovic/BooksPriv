@@ -27,12 +27,14 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
     setSelectedIds(newSelectedIds);
     setRemainingIds(allIds.filter((id) => !newSelectedIds.includes(id)));
     setSearch("");
+    handleOutput(newSelectedIds);
   }
 
   function removeSelection(tokenId: string) {
     const newSelectedIds = selectedIds.filter((id) => id !== tokenId);
     setSelectedIds(newSelectedIds);
     setRemainingIds(allIds.filter((id) => !newSelectedIds.includes(id)));
+    handleOutput(newSelectedIds);
   }
 
   const selectedTokens = useMemo(() => {
@@ -42,10 +44,6 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
   const remainingTokens = useMemo(() => {
     return tokens.filter((t) => remainingIds.includes(t.id));
   }, [remainingIds, tokens]);
-
-  useEffect(() => {
-    handleOutput(selectedIds);
-  }, [selectedIds]);
 
   useEffect(() => {
     if (search === "") {
@@ -58,7 +56,7 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
       })
       .slice(0, 5);
     setSuggestions(newSuggestions);
-  }, [search, tokens]);
+  }, [search, tokens, remainingTokens]);
 
   return (
     <span>

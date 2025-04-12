@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { apiAxios } from "../axios";
 import { Author, Genre, Genres } from "../model/model";
 import TokenizedInput from "./TokenInput";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 type Props = {
   authors: Author[];
@@ -33,10 +33,10 @@ const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
     watch,
   } = useForm<Inputs>();
 
-  const [selectedAuthorIds, setSelectedAuthorIds] = useState("");
   const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
     genres.adult
   );
+  const [selectedAuthorIds, setSelectedAuthorIds] = useState("");
   const [selectedGenreIds, setSelectedGenreIds] = useState("");
 
   watch((value, _info) => {
@@ -50,8 +50,6 @@ const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
   });
 
   async function submit(inputs: Inputs) {
-    console.log(inputs.authors);
-
     const formData = new FormData();
     formData.append("title", inputs.title);
     formData.append("isbn", inputs.isbn);
@@ -61,8 +59,6 @@ const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
     formData.append("genres", inputs.genres);
     formData.append("authors", inputs.authors);
     formData.append("forChildren", inputs.forChildren ? "true" : "false");
-
-    // console.log(inputs.image);
 
     if (inputs.image && inputs.image.length == 1)
       formData.append("image", inputs.image[0]);
@@ -329,8 +325,4 @@ const AdminAddBook = ({ authors, genres, handleClose }: Props) => {
   );
 };
 
-/*
-  image?: string;
-*/
-
-export default AdminAddBook;
+export default memo(AdminAddBook);

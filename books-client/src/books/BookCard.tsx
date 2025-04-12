@@ -15,7 +15,7 @@ export const BookCard = ({ book }: Props) => {
 
   const isInCart = useMemo(() => {
     return cartState.books.findIndex((b) => b.id === book.id) !== -1;
-  }, [cartState]);
+  }, [cartState, book.id]);
 
   const bgImageUrl = ApiUrl + book.image;
   // const bgImageCss = `bg-[url(${bgImageUrl})]`;
