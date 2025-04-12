@@ -1,7 +1,7 @@
 import { UserContext } from "./UserContext";
-import { UserInfo } from "../model";
+import { UserInfo } from "../model/model";
 import { useQuery } from "@tanstack/react-query";
-import { GetUserInfoQuery } from "../queryKeys";
+import { GetUserInfoQuery } from "../queries/queryKeys";
 import { apiAxios } from "../axios";
 import { AxiosError } from "axios";
 

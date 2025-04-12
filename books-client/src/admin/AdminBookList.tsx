@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { Author, Book } from "../model";
+import { Author, Book } from "../model/model";
 import { Link } from "react-router";
 
 type Props = {

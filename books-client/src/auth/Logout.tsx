@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { apiAxios } from "../axios";
 import { useQueryClient } from "@tanstack/react-query";
-import { GetUserInfoQuery } from "../queryKeys";
+import { GetUserInfoQuery } from "../queries/queryKeys";
 
 const Logout = () => {
   const queryClient = useQueryClient();

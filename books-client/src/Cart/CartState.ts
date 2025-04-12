@@ -1,4 +1,4 @@
-import { Book } from "../model";
+import { Book } from "../model/model";
 
 export class CartState {
   public books: Book[];

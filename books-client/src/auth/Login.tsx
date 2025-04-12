@@ -3,7 +3,7 @@ import { apiAxios } from "../axios";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { GetUserInfoQuery } from "../queryKeys";
+import { GetUserInfoQuery } from "../queries/queryKeys";
 
 type Inputs = {
   email: string;

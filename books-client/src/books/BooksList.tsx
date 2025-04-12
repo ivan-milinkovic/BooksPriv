@@ -1,4 +1,4 @@
-import { Book } from "../model";
+import { Book } from "../model/model";
 import { BookCard } from "./BookCard";
 
 type Props = {

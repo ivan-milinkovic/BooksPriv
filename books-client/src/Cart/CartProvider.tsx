@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CartState } from "./CartState";
 import { CartContext, CartFunctions } from "./CartContext";
-import { Book } from "../model";
+import { Book } from "../model/model";
 
 type Props = {
   children: React.ReactNode;

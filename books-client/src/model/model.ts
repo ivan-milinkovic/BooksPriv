@@ -33,15 +33,37 @@ export type BooksResponse = {
   books: Book[];
 };
 
+export type UserInfo = {
+  email: string;
+  isGuest: boolean;
+};
+
 export type Cursor = {
   pageIndex: number;
   pageSize: number;
 };
 
-export type UserInfo = {
-  email: string;
-  isGuest: boolean;
-};
+export function nextCursor(
+  lastCursor: Cursor,
+  pageSize: number
+): Cursor | null {
+  if (lastCursor.pageSize < pageSize) return null;
+  return {
+    pageIndex: lastCursor.pageIndex + 1,
+    pageSize: pageSize,
+  };
+}
+
+export function prevCursor(
+  lastCursor: Cursor,
+  pageSize: number
+): Cursor | null {
+  if (lastCursor.pageIndex == 0) return null;
+  return {
+    pageIndex: lastCursor.pageIndex - 1,
+    pageSize: pageSize,
+  };
+}
 
 // export class Cursor {
 //   public readonly pageIndex: number;

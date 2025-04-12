@@ -1,17 +1,17 @@
-import {
-  InfiniteData,
-  QueryFunctionContext,
-  useMutation,
-  useSuspenseInfiniteQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
-import { Author, BooksResponse, Cursor, Genres } from "../model";
+import { useMutation } from "@tanstack/react-query";
+import { Author, Genres } from "../model/model";
 import { apiAxios } from "../axios";
-import { AdminGetBooksQuery } from "../queryKeys";
+import { AdminGetBooksQuery } from "../queries/queryKeys";
 import AdminBookList from "./AdminBookList";
 import { useMemo, useState } from "react";
 import { Modal } from "../modal/Modal";
 import AdminAddBook from "./AdminAddBook";
+import {
+  useBooksSuspenseInfiniteQuery,
+  useDeleteBooksMutation,
+} from "../queries/booksQuery";
+import { useAuthorsSuspenseQuery } from "../queries/authorsQuery";
+import { useGenresSuspenseQuery } from "../queries/genresQuery";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -19,72 +19,17 @@ const MaxPages = 3;
 const AdminBooks = () => {
   const [selection, setSelection] = useState<number[]>([]);
   const [showAddBook, setShowAddBook] = useState(false);
-  const initialCursor: Cursor = {
-    pageIndex: 0,
-    pageSize: PageSize,
-  };
 
-  async function fetchBooks(
-    context: QueryFunctionContext<string[], Cursor>
-  ): Promise<BooksResponse> {
-    const cursor = context.pageParam;
-    const url = `bookspage?pageIndex=${cursor.pageIndex}&pageSize=${cursor.pageSize}`;
-    const res = await apiAxios.get(url);
-    const booksRes = res.data as BooksResponse;
-    // await new Promise((resolve, reject) => setTimeout(resolve, 2000));
-    return booksRes;
-  }
-
-  function nextCursor(lastCursor: Cursor): Cursor | null {
-    if (lastCursor.pageSize < PageSize) return null;
-    return {
-      pageIndex: lastCursor.pageIndex + 1,
-      pageSize: PageSize,
-    };
-  }
-
-  function prevCursor(lastCursor: Cursor): Cursor | null {
-    if (lastCursor.pageIndex == 0) return null;
-    return {
-      pageIndex: lastCursor.pageIndex - 1,
-      pageSize: PageSize,
-    };
-  }
-
-  const booksQuery = useSuspenseInfiniteQuery<
-    BooksResponse,
-    Error,
-    InfiniteData<BooksResponse, Cursor>,
-    string[],
-    Cursor
-  >({
-    queryKey: [AdminGetBooksQuery],
-    queryFn: fetchBooks,
-    initialPageParam: initialCursor,
-    getNextPageParam: nextCursor,
-    getPreviousPageParam: prevCursor,
-    maxPages: MaxPages,
-  });
-
-  const authorsQuery = useSuspenseQuery({
-    queryKey: ["GetAuthorsQuery"],
-    queryFn: async () => {
-      const res = await apiAxios.get("/authors");
-      return res.data as Author[];
-    },
-  });
-
-  const genresQuery = useSuspenseQuery({
-    queryKey: ["GetGenresQuery"],
-    queryFn: async () => {
-      const res = await apiAxios.get("/genres");
-      return res.data as Genres;
-    },
-  });
+  const booksQuery = useBooksSuspenseInfiniteQuery(
+    [AdminGetBooksQuery],
+    PageSize,
+    MaxPages
+  );
+  const authorsQuery = useAuthorsSuspenseQuery();
+  const genresQuery = useGenresSuspenseQuery();
 
   const booksData = booksQuery.data;
   if (!booksData) return <>Error</>; // todo: throw error
-
   const books = useMemo(() => {
     return booksData.pages.flatMap((page) => page.books);
   }, [booksData]);
@@ -106,16 +51,7 @@ const AdminBooks = () => {
     return selection.join(", ");
   }, [selection]);
 
-  const deleteMutation = useMutation({
-    mutationKey: ["DeleteBooksMutation"],
-    mutationFn: async (ids: number[]) => {
-      await apiAxios({
-        method: "delete",
-        url: "/books",
-        data: JSON.stringify(ids),
-      });
-    },
-  });
+  const deleteMutation = useDeleteBooksMutation();
 
   async function confirmDeletion() {
     if (confirm(`Delete ${formattedSelection}?`)) {

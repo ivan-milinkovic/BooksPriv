@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Book } from "../model";
+import { Book } from "../model/model";
 import { CartState } from "./CartState";
 
 export type CartFunctions = {

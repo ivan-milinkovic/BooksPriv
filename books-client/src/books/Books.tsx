@@ -1,70 +1,23 @@
 import { useMemo } from "react";
-import {
-  InfiniteData,
-  QueryFunctionContext,
-  useSuspenseInfiniteQuery,
-} from "@tanstack/react-query";
-import { apiAxios } from "../axios";
-import { GetBooksQuery } from "../queryKeys";
-import { BooksResponse, Cursor } from "../model";
+import { GetBooksQuery } from "../queries/queryKeys";
 import { BooksList } from "./BooksList";
+import { useBooksSuspenseInfiniteQuery } from "../queries/booksQuery";
 
 const PageSize = 10;
 const MaxPages = 3;
 
 const Books = () => {
-  const initialCursor: Cursor = {
-    pageIndex: 0,
-    pageSize: PageSize,
-  };
-
-  async function fetchBooks(
-    context: QueryFunctionContext<string[], Cursor>
-  ): Promise<BooksResponse> {
-    const cursor = context.pageParam;
-    const url = `bookspage?pageIndex=${cursor.pageIndex}&pageSize=${cursor.pageSize}`;
-    const res = await apiAxios.get(url);
-    const booksRes = res.data as BooksResponse;
-    // await new Promise((resolve, reject) => setTimeout(resolve, 2000));
-    return booksRes;
-  }
-
-  function nextCursor(lastCursor: Cursor): Cursor | null {
-    if (lastCursor.pageSize < PageSize) return null;
-    return {
-      pageIndex: lastCursor.pageIndex + 1,
-      pageSize: PageSize,
-    };
-  }
-
-  function prevCursor(lastCursor: Cursor): Cursor | null {
-    if (lastCursor.pageIndex == 0) return null;
-    return {
-      pageIndex: lastCursor.pageIndex - 1,
-      pageSize: PageSize,
-    };
-  }
-
-  const booksQuery = useSuspenseInfiniteQuery<
-    BooksResponse,
-    Error,
-    InfiniteData<BooksResponse, Cursor>,
-    string[],
-    Cursor
-  >({
-    queryKey: [GetBooksQuery],
-    queryFn: fetchBooks,
-    initialPageParam: initialCursor,
-    getNextPageParam: nextCursor,
-    getPreviousPageParam: prevCursor,
-    maxPages: MaxPages,
-  });
+  const booksQuery = useBooksSuspenseInfiniteQuery(
+    [GetBooksQuery],
+    PageSize,
+    MaxPages
+  );
 
   const data = booksQuery.data;
   if (!data) return <>Error</>; // todo: throw error
 
   const books = useMemo(() => {
-    return data.pages.flatMap((page) => page.books);
+    return data.pages.flatMap((page) => page.books); // infinite query stores data per page, so flatten into one array
   }, [data]);
 
   return (
@@ -85,6 +38,7 @@ const Books = () => {
 
       <div>
         <BooksList books={books} />
+        {/* preview pages */}
         {/* {data.pages.map((page) => (
           <React.Fragment key={page.pageIndex}>
             page: {page.pageIndex}, count: {page.pageSize}
