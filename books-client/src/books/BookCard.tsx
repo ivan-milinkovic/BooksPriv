@@ -23,7 +23,7 @@ export const BookCard = ({ book }: Props) => {
   return (
     <div
       className={
-        "rounded-3xl subtle-background w-[200px] h-[280px] p-0 overflow-clip bg-cover "
+        "rounded-2xl subtle-background w-[200px] h-[280px] p-0 overflow-clip bg-cover "
         // + bgImageCss
       }
     >

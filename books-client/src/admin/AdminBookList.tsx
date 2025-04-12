@@ -5,9 +5,10 @@ import { Link } from "react-router";
 type Props = {
   books: Book[];
   onBookSelected: (bookId: number, isSelected: boolean) => void;
+  onBookEdit: (bookId: number) => void;
 };
 
-const AdminBookList = ({ books, onBookSelected }: Props) => {
+const AdminBookList = ({ books, onBookSelected, onBookEdit }: Props) => {
   function formatAuthors(authors: Author[]): string {
     return authors.map((a) => a.name).join(", ");
   }
@@ -44,7 +45,14 @@ const AdminBookList = ({ books, onBookSelected }: Props) => {
               <td>{book.publishDate}</td>
               <td>
                 <div>
-                  <button className="link">✎</button>
+                  <button
+                    className="link"
+                    onClick={() => {
+                      onBookEdit(book.id);
+                    }}
+                  >
+                    ✎
+                  </button>
                   <input
                     type="checkbox"
                     onChange={(e) => onCheckbox(e, book.id)}

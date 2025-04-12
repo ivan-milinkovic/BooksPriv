@@ -1,24 +1,25 @@
-import { Author, Genres } from "../model/model";
+import { Author, Book, Genres } from "../model/model";
 import { AdminGetBooksQuery } from "../queries/queryKeys";
-import AdminBookList from "./AdminBookList";
 import { useMemo, useState } from "react";
 import { Modal } from "../modal/Modal";
-import AdminAddBook from "./AdminAddBook";
-import {
-  useBooksSuspenseInfiniteQuery,
-  useDeleteBooksMutation,
-} from "../queries/booksQuery";
 import { useAuthorsSuspenseQuery } from "../queries/authorsQuery";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
 import AdminBooksToolbar from "./AdminBooksToolbar";
+import AdminBookList from "./AdminBookList";
+import BookForm from "./BookForm";
+import {
+  useBooksSuspenseInfiniteQuery,
+  useDeleteBooksMutation,
+} from "../queries/booksQuery";
 
 const PageSize = 10;
 const MaxPages = 3;
 
 const AdminBooks = () => {
   const [selection, setSelection] = useState<number[]>([]);
-  const [showAddBook, setShowAddBook] = useState(false);
+  const [showAddBook, setShowAddBook] = useState<boolean>(false);
+  const [editBook, setEditBook] = useState<Book | undefined>(undefined);
 
   const booksQuery = useBooksSuspenseInfiniteQuery(
     [AdminGetBooksQuery],
@@ -60,18 +61,26 @@ const AdminBooks = () => {
     }
   }
 
+  function onBookEdit(bookId: number) {
+    setEditBook(books.find((b) => b.id === bookId));
+  }
+
+  function handleBookFormClose(changed: boolean) {
+    setShowAddBook(false);
+    setEditBook(undefined);
+    if (changed) booksQuery.refetch();
+  }
+
   return (
     <div className="mt-4">
       {/* Modals */}
-      {showAddBook && (
+      {(showAddBook || editBook) && (
         <Modal>
-          <AdminAddBook
+          <BookForm
+            editBook={editBook}
             authors={authors}
             genres={genres}
-            handleClose={(added: boolean) => {
-              setShowAddBook(false);
-              if (added) booksQuery.refetch();
-            }}
+            handleClose={handleBookFormClose}
           />
         </Modal>
       )}
@@ -96,7 +105,11 @@ const AdminBooks = () => {
         />
       </div>
 
-      <AdminBookList books={books} onBookSelected={onBookSelected} />
+      <AdminBookList
+        books={books}
+        onBookSelected={onBookSelected}
+        onBookEdit={onBookEdit}
+      />
 
       {/* Load Next */}
       <div className="mb-8 text-center">

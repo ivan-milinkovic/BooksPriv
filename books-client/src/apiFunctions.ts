@@ -24,3 +24,21 @@ export async function fetchFilteredBooksPage(
   const booksRes = res.data as BooksResponse;
   return booksRes;
 }
+
+export async function postBook(formData: FormData) {
+  await apiAxios({
+    method: "post",
+    url: "books",
+    headers: { "Content-Type": "multipart/form-data" },
+    data: formData,
+  });
+}
+
+export async function updateBook(bookId: number, formData: FormData) {
+  await apiAxios({
+    method: "put",
+    url: `books/${bookId}`,
+    headers: { "Content-Type": "multipart/form-data" },
+    data: formData,
+  });
+}
