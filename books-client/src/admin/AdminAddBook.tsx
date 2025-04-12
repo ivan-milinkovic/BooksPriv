@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { apiAxios } from "../axios";
 import { Author, Genre, Genres } from "../model/model";
-import TokenizedInput from "./TokenInput";
+import TokenizedInput from "../components/TokenInput";
 import { memo, useState } from "react";
 
 type Props = {
