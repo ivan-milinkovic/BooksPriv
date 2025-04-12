@@ -35,6 +35,21 @@ function makeInputDate(dateString: string) {
 
 function BookForm({ editBook, authors, genres, handleClose }: Props) {
   const initialForChildren = editBook?.forChildren || false;
+  const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
+    initialForChildren ? genres.children : genres.adult
+  );
+
+  const initialAuthorsSelection =
+    editBook?.authors.map((a) => a.id.toString()) || [];
+  const [selectedAuthorIds, setSelectedAuthorIds] = useState(
+    initialAuthorsSelection.join(",")
+  );
+
+  const initialGenresSelection = editBook?.genres || [];
+  const [selectedGenreIds, setSelectedGenreIds] = useState(
+    initialGenresSelection.join(",")
+  );
+
   const {
     register,
     handleSubmit,
@@ -51,19 +66,13 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
         ? makeInputDate(editBook.publishDate)
         : "2000-01-01",
       pageCount: editBook?.pageCount || 200,
-      authors: "",
-      genres: "",
+      authors: selectedAuthorIds,
+      genres: selectedGenreIds,
       forChildren: initialForChildren === true, // because javascript...
       description:
         editBook?.description || "Etiam lobortis, libero id suscipit commodo.",
     },
   });
-
-  const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
-    initialForChildren ? genres.children : genres.adult
-  );
-  const [selectedAuthorIds, setSelectedAuthorIds] = useState("");
-  const [selectedGenreIds, setSelectedGenreIds] = useState("");
 
   watch((value, _info) => {
     if (typeof value.forChildren === "undefined") return;
@@ -105,17 +114,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
     const newCommaSeparatedGenreIds = newGenreIds.join(",");
     setSelectedGenreIds(newCommaSeparatedGenreIds);
     setValue("genres", newCommaSeparatedGenreIds, { shouldValidate: true });
-  }
-
-  const initialAuthorsSelection =
-    editBook?.authors.map((a) => a.id.toString()) || [];
-
-  let initialDate: string = "2000-01-01";
-  if (editBook) {
-    const date = new Date(editBook.publishDate);
-    var day = ("0" + date.getDate()).slice(-2); // adds zero, takes the last 2 (because 031)
-    var month = ("0" + (date.getMonth() + 1)).slice(-2);
-    initialDate = date.getFullYear() + "-" + month + "-" + day;
   }
 
   return (
@@ -277,7 +275,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
                   name: g,
                 };
               })}
-              initialSelection={editBook?.genres || []}
+              initialSelection={initialGenresSelection}
               handleOutput={(newGenreIds) => handleGenreIds(newGenreIds)}
             />
             <input
@@ -290,9 +288,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
           </div>
 
           <div className="table-cell">
-            {errors.pageCount && (
-              <div className="error-text">Required field</div>
-            )}
+            {errors.genres && <div className="error-text">Required field</div>}
           </div>
         </div>
 
