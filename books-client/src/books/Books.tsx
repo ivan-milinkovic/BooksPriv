@@ -1,19 +1,30 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { GetBooksQuery } from "../queries/queryKeys";
 import { BooksList } from "./BooksList";
 import { useBooksSuspenseInfiniteQuery } from "../queries/booksQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
 import Filters, { FilterInfo } from "../components/Filters";
+import useDebounce from "../components/useDebounce";
 
 const PageSize = 10;
 const MaxPages = 3;
 
+const emptyFilter: FilterInfo = {
+  titleFilter: "",
+  authorsFilter: "",
+  genresFilter: [],
+};
+
 const Books = () => {
+  // const [debouncedFilter, setDebouncedFilter] = useState(emptyFilter);
+
   const booksQuery = useBooksSuspenseInfiniteQuery(
     [GetBooksQuery],
     PageSize,
     MaxPages
   );
+
+  const [filter, setFilter] = useState<FilterInfo>(emptyFilter);
 
   const booksData = booksQuery.data;
 
@@ -23,8 +34,15 @@ const Books = () => {
   }, [booksData]);
 
   function handleFiltersUpdate(filterInfo: FilterInfo) {
-    console.log(filterInfo);
+    setFilter(filterInfo);
   }
+
+  useCallback(() => {}, [filter]);
+  const debouncedFilter = useDebounce(filter, 500);
+
+  useEffect(() => {
+    console.log(debouncedFilter);
+  }, [debouncedFilter]);
 
   return (
     <>

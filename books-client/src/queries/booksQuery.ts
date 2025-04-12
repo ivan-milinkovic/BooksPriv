@@ -34,6 +34,32 @@ export function useBooksSuspenseInfiniteQuery(
   });
 }
 
+export function useFilteredBooksSuspenseInfiniteQuery(
+  queryKey: string[],
+  pageSize: number,
+  maxPages: number
+) {
+  return useSuspenseInfiniteQuery<
+    BooksResponse,
+    Error,
+    InfiniteData<BooksResponse, Cursor>,
+    string[],
+    Cursor
+  >({
+    queryKey: queryKey,
+    queryFn: (context: QueryFunctionContext<string[], Cursor>) =>
+      fetchBooksPage(context.pageParam),
+    initialPageParam: {
+      pageIndex: 0,
+      pageSize: pageSize,
+    },
+    getNextPageParam: (lastCursor: Cursor) => nextCursor(lastCursor, pageSize),
+    getPreviousPageParam: (lastCursor: Cursor) =>
+      prevCursor(lastCursor, pageSize),
+    maxPages: maxPages,
+  });
+}
+
 export function useDeleteBooksMutation() {
   return useMutation({
     mutationKey: ["DeleteBooksMutation"],

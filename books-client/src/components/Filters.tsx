@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import TagsPicker from "./TagsPicker";
 import { Genre } from "../model/model";
@@ -21,23 +21,12 @@ export default function Filters({ handleFiltersUpdate }: Props) {
   const genresQuery = useGenresSuspenseQuery();
   const genres = genresQuery.data;
 
-  function sendFilterUpdate() {
-    const filterInfo: FilterInfo = {
-      titleFilter: title,
-      authorsFilter: authors,
-      genresFilter: genresSelection,
-    };
-    handleFiltersUpdate(filterInfo);
-  }
-
   function updateTitleState(val: string) {
     setTitle(val);
-    sendFilterUpdate();
   }
 
   function updateAuthorsState(val: string) {
     setAuthors(val);
-    sendFilterUpdate();
   }
 
   const isGenreSelected = useCallback(
@@ -55,7 +44,6 @@ export default function Filters({ handleFiltersUpdate }: Props) {
       newGenresSelection = [...genresSelection, genreId];
     }
     setGenresSelection(newGenresSelection);
-    sendFilterUpdate();
   }
 
   const tags = useMemo(() => {
@@ -63,6 +51,15 @@ export default function Filters({ handleFiltersUpdate }: Props) {
       return { id: g, name: g, isSelected: isGenreSelected(g) };
     });
   }, [genres, isGenreSelected]);
+
+  useEffect(() => {
+    const filterInfo: FilterInfo = {
+      titleFilter: title,
+      authorsFilter: authors,
+      genresFilter: genresSelection,
+    };
+    handleFiltersUpdate(filterInfo);
+  }, [title, authors, genresSelection]);
 
   return (
     <div className="max-w-[700px]">
