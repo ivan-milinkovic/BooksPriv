@@ -9,8 +9,8 @@ import { Suspense } from "react";
 import Loading from "./Loading";
 import Books from "./books/Books";
 import BookDetails from "./books/BookDetails";
-import CartDetails from "./Cart/CartDetails";
-import CartProvider from "./Cart/CartProvider";
+import CartDetails from "./cart/CartDetails";
+import CartProvider from "./cart/CartProvider";
 import UserProvider from "./auth/UserProvider";
 import { ModalContainer } from "./modal/ModalContainer";
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import CartButton from "./Cart/CartButton";
+import CartButton from "./cart/CartButton";
 import Logout from "./auth/Logout";
 import { useUserInfo } from "./auth/useUserInfo";
 

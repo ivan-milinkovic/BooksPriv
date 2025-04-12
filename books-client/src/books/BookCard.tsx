@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Author, Book } from "../model/model";
-import useCart from "../Cart/useCart";
+import useCart from "../cart/useCart";
 import { useMemo } from "react";
 import { ApiUrl } from "../apiConfig";
 

@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import Loading from "../Loading";
 import { Author, Book } from "../model/model";
 import { apiAxios } from "../axios";
-import useCart from "../Cart/useCart";
+import useCart from "../cart/useCart";
 import { ApiUrl } from "../apiConfig";
 
 const BookDetails = () => {
