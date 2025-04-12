@@ -2,14 +2,12 @@
 
 https://htecgroup-my.sharepoint.com/:w:/r/personal/stefan_milic_htecgroup_com/_layouts/15/Doc.aspx?sourcedoc=%7B0C06BC5D-FF6F-4745-AD84-1D61195978DB%7D&file=Document.docx&wdLOR=c04843E39-0CBB-DB49-AA2F-E2A7BE0DB19B&fromShare=true&action=default&mobileredirect=true
 
-- admin edit book authors issue
 - admin add author
 - publish date react date picker
 - publish date cannot be in the future
 - infinite scroll and load
 - add filter to admin book list
 - book details publish date
-- issue switching genre groups
 
 # Run
 

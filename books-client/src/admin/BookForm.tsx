@@ -35,7 +35,6 @@ function makeInputDate(dateString: string) {
 
 function BookForm({ editBook, authors, genres, handleClose }: Props) {
   const initialForChildren = editBook?.forChildren || false;
-  console.log(editBook?.forChildren);
   const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
     initialForChildren ? genres.children : genres.adult
   );
