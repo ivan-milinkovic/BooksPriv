@@ -3,7 +3,7 @@ import { GetBooksQuery } from "../queries/queryKeys";
 import { BooksList } from "./BooksList";
 import { useBooksSuspenseInfiniteQuery } from "../queries/booksQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
-import Filters from "../components/Filters";
+import Filters, { FilterInfo } from "../components/Filters";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -22,10 +22,14 @@ const Books = () => {
     return booksData.pages.flatMap((page) => page.books); // infinite query stores data per page, so flatten into one array
   }, [booksData]);
 
+  function handleFiltersUpdate(filterInfo: FilterInfo) {
+    console.log(filterInfo);
+  }
+
   return (
     <>
       <div>
-        <Filters />
+        <Filters handleFiltersUpdate={handleFiltersUpdate} />
       </div>
 
       <div>

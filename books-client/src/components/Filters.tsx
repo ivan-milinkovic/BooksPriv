@@ -3,7 +3,17 @@ import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import TagsPicker from "./TagsPicker";
 import { Genre } from "../model/model";
 
-export default function Filters() {
+export type FilterInfo = {
+  titleFilter: string;
+  authorsFilter: string;
+  genresFilter: string[];
+};
+
+type Props = {
+  handleFiltersUpdate: (filterInfo: FilterInfo) => void;
+};
+
+export default function Filters({ handleFiltersUpdate }: Props) {
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState("");
   const [genresSelection, setGenresSelection] = useState<Genre[]>([]);
@@ -11,17 +21,29 @@ export default function Filters() {
   const genresQuery = useGenresSuspenseQuery();
   const genres = genresQuery.data;
 
+  function sendFilterUpdate() {
+    const filterInfo: FilterInfo = {
+      titleFilter: title,
+      authorsFilter: authors,
+      genresFilter: genresSelection,
+    };
+    handleFiltersUpdate(filterInfo);
+  }
+
   function updateTitleState(val: string) {
     setTitle(val);
+    sendFilterUpdate();
   }
 
   function updateAuthorsState(val: string) {
     setAuthors(val);
+    sendFilterUpdate();
   }
 
   function isGenreSelected(id: string) {
     return genresSelection.findIndex((g) => g === id) >= 0;
   }
+
   function handleGenreSelection(genreId: string) {
     let newGenresSelection: Genre[];
     if (isGenreSelected(genreId))
@@ -30,6 +52,7 @@ export default function Filters() {
       newGenresSelection = [...genresSelection, genreId];
     }
     setGenresSelection(newGenresSelection);
+    sendFilterUpdate();
   }
 
   const tags = useMemo(() => {
