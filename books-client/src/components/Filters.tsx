@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import TagsPicker from "./TagsPicker";
 import { Genre } from "../model/model";
@@ -40,9 +40,12 @@ export default function Filters({ handleFiltersUpdate }: Props) {
     sendFilterUpdate();
   }
 
-  function isGenreSelected(id: string) {
-    return genresSelection.findIndex((g) => g === id) >= 0;
-  }
+  const isGenreSelected = useCallback(
+    (id: string) => {
+      return genresSelection.findIndex((g) => g === id) >= 0;
+    },
+    [genresSelection]
+  );
 
   function handleGenreSelection(genreId: string) {
     let newGenresSelection: Genre[];
@@ -59,7 +62,7 @@ export default function Filters({ handleFiltersUpdate }: Props) {
     return [...genres.children, ...genres.adult].map((g) => {
       return { id: g, name: g, isSelected: isGenreSelected(g) };
     });
-  }, [genres, genresSelection, isGenreSelected]);
+  }, [genres, isGenreSelected]);
 
   return (
     <div className="max-w-[700px]">
