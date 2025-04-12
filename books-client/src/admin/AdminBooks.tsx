@@ -11,6 +11,7 @@ import {
 import { useAuthorsSuspenseQuery } from "../queries/authorsQuery";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
+import AdminBooksToolbar from "./AdminBooksToolbar";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -61,6 +62,7 @@ const AdminBooks = () => {
 
   return (
     <div className="mt-4">
+      {/* Modals */}
       {showAddBook && (
         <Modal>
           <AdminAddBook
@@ -73,27 +75,19 @@ const AdminBooks = () => {
           />
         </Modal>
       )}
+
+      {/* Toolbar */}
       <div className="mb-4">
-        <button
-          onClick={() => {
+        <AdminBooksToolbar
+          selection={selection}
+          handleAdd={() => {
             setShowAddBook(true);
           }}
-          className="secondary-button"
-        >
-          Add Book
-        </button>
-        <span className="mx-4">|</span>
-        <span>
-          Selected IDs: &nbsp;
-          <span>{formattedSelection}</span>
-        </span>
-        <span>
-          <button onClick={confirmDeletion} className="secondary-button ms-2">
-            Delete
-          </button>
-        </span>
+          handleDelete={confirmDeletion}
+        />
       </div>
 
+      {/* Load Previous */}
       <div className="text-center">
         <LoadPrevButton
           hasMore={booksQuery.hasPreviousPage}
@@ -103,6 +97,8 @@ const AdminBooks = () => {
       </div>
 
       <AdminBookList books={books} onBookSelected={onBookSelected} />
+
+      {/* Load Next */}
       <div className="mb-8 text-center">
         <LoadNextButton
           hasMore={booksQuery.hasNextPage}
