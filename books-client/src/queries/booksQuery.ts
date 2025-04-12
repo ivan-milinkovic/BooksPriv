@@ -1,11 +1,18 @@
 import {
   InfiniteData,
   QueryFunctionContext,
+  useInfiniteQuery,
   useMutation,
   useSuspenseInfiniteQuery,
 } from "@tanstack/react-query";
-import { BooksResponse, Cursor, nextCursor, prevCursor } from "../model/model";
-import { fetchBooksPage } from "../apiFunctions";
+import {
+  BooksResponse,
+  Cursor,
+  FilterInfo,
+  nextCursor,
+  prevCursor,
+} from "../model/model";
+import { fetchBooksPage, fetchFilteredBooksPage } from "../apiFunctions";
 import { apiAxios } from "../axios";
 
 export function useBooksSuspenseInfiniteQuery(
@@ -34,12 +41,13 @@ export function useBooksSuspenseInfiniteQuery(
   });
 }
 
-export function useFilteredBooksSuspenseInfiniteQuery(
+export function useFilteredBooksInfiniteQuery(
   queryKey: string[],
   pageSize: number,
-  maxPages: number
+  maxPages: number,
+  filter: FilterInfo
 ) {
-  return useSuspenseInfiniteQuery<
+  return useInfiniteQuery<
     BooksResponse,
     Error,
     InfiniteData<BooksResponse, Cursor>,
@@ -48,7 +56,7 @@ export function useFilteredBooksSuspenseInfiniteQuery(
   >({
     queryKey: queryKey,
     queryFn: (context: QueryFunctionContext<string[], Cursor>) =>
-      fetchBooksPage(context.pageParam),
+      fetchFilteredBooksPage(context.pageParam, filter),
     initialPageParam: {
       pageIndex: 0,
       pageSize: pageSize,

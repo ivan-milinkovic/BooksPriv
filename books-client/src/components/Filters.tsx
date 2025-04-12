@@ -1,13 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import TagsPicker from "./TagsPicker";
-import { Genre } from "../model/model";
-
-export type FilterInfo = {
-  titleFilter: string;
-  authorsFilter: string;
-  genresFilter: string[];
-};
+import { FilterInfo, Genre } from "../model/model";
 
 type Props = {
   handleFiltersUpdate: (filterInfo: FilterInfo) => void;

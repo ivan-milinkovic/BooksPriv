@@ -39,6 +39,10 @@ https://medium.com/@gabrieldrouin/node-js-2025-guide-how-to-setup-express-js-wit
 
 https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production
 
+# Snippets
+
+`await new Promise((resolve, reject) => setTimeout(resolve, 1000));`
+
 # Attribution
 
 Book placeholders found at:

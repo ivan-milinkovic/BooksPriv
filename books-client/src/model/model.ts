@@ -65,6 +65,17 @@ export function prevCursor(
   };
 }
 
+export type FilterInfo = {
+  titleFilter: string;
+  authorsFilter: string;
+  genresFilter: string[];
+};
+
+export function queryFromFilter(filter: FilterInfo): string {
+  const genresFilter = filter.genresFilter.map((g) => g.trim()).join(",");
+  return `titleFilter=${filter.titleFilter.trim()}&authorsFilter=${filter.authorsFilter.trim()}&genresFilter=${genresFilter}`;
+}
+
 // export class Cursor {
 //   public readonly pageIndex: number;
 //   public readonly pageSize: number;

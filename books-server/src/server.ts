@@ -127,8 +127,53 @@ app.get('/bookspage', async (req: Request, res: Response) => {
     return;
   }
 
+  const titleFilter = req.query.titleFilter as string;
+  const authorsFilter = req.query.authorsFilter as string;
+  const genresFilter = req.query.genresFilter as string;
+
+  let resBooks: Book[] = books;
+
+  // Filter by title
+  if (titleFilter && titleFilter.length > 0) {
+    resBooks = resBooks.filter((b) => b.title.includes(titleFilter));
+  }
+
+  // Filter by authors
+  if (authorsFilter && authorsFilter.length > 0) {
+    resBooks = resBooks.filter((b) => {
+      for (const a of b.authors) {
+        if (a.name.includes(authorsFilter)) return true;
+      }
+      return false;
+    });
+  }
+
+  // Filter by genres
+  if (genresFilter && genresFilter.length > 0) {
+    const filterGenres = genresFilter.split(',');
+
+    // OR filter
+    // resBooks = resBooks.filter((b) => {
+    //   for (const g of b.genres) {
+    //     if (filterGenres.includes(g)) return true;
+    //   }
+    //   return false;
+    // });
+
+    // AND filter
+    resBooks = resBooks.filter((b) => {
+      for (const fg of filterGenres) {
+        if (!b.genres.includes(fg)) return false;
+      }
+      return true;
+    });
+  }
+
+  // Filter by page
   const start = pageIndex * pageSize;
-  const resBooks = books.slice(start, start + pageSize);
+  resBooks = resBooks.slice(start, start + pageSize);
+
+  // Response
   tryApplyImage(resBooks);
 
   const booksResponse: BooksResponse = {

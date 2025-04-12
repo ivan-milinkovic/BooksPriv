@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GetBooksQuery } from "../queries/queryKeys";
 import { BooksList } from "./BooksList";
-import { useBooksSuspenseInfiniteQuery } from "../queries/booksQuery";
+import { useFilteredBooksInfiniteQuery } from "../queries/booksQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
-import Filters, { FilterInfo } from "../components/Filters";
+import Filters from "../components/Filters";
 import useDebounce from "../components/useDebounce";
+import Loading from "../Loading";
+import { FilterInfo, queryFromFilter } from "../model/model";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -16,12 +18,17 @@ const emptyFilter: FilterInfo = {
 };
 
 const Books = () => {
-  // const [debouncedFilter, setDebouncedFilter] = useState(emptyFilter);
+  const [debouncedFilter, setDebouncedFilter] = useState(emptyFilter);
 
-  const booksQuery = useBooksSuspenseInfiniteQuery(
-    [GetBooksQuery],
+  const filterQuery = useMemo(() => {
+    return queryFromFilter(debouncedFilter);
+  }, [debouncedFilter]);
+
+  const booksQuery = useFilteredBooksInfiniteQuery(
+    [GetBooksQuery, filterQuery],
     PageSize,
-    MaxPages
+    MaxPages,
+    debouncedFilter
   );
 
   const [filter, setFilter] = useState<FilterInfo>(emptyFilter);
@@ -37,18 +44,19 @@ const Books = () => {
     setFilter(filterInfo);
   }
 
-  useCallback(() => {}, [filter]);
-  const debouncedFilter = useDebounce(filter, 500);
+  const debouncedFilter0 = useDebounce(filter, 500);
 
   useEffect(() => {
-    console.log(debouncedFilter);
-  }, [debouncedFilter]);
+    setDebouncedFilter(debouncedFilter0);
+  }, [debouncedFilter0]);
 
   return (
     <>
       <div>
         <Filters handleFiltersUpdate={handleFiltersUpdate} />
       </div>
+
+      {booksQuery.isLoading && <Loading />}
 
       <div>
         <LoadPrevButton
