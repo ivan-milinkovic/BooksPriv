@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Author, Book, Genre, Genres } from "../model/model";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { postBook, updateBook } from "../apiFunctions";
 import TokenizedInput from "../components/TokenInput";
 import { ApiUrl } from "../apiConfig";
@@ -35,6 +35,7 @@ function makeInputDate(dateString: string) {
 
 function BookForm({ editBook, authors, genres, handleClose }: Props) {
   const initialForChildren = editBook?.forChildren || false;
+  console.log(editBook?.forChildren);
   const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
     initialForChildren ? genres.children : genres.adult
   );
@@ -45,9 +46,11 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
     initialAuthorsSelection.join(",")
   );
 
-  const initialGenresSelection = editBook?.genres || [];
+  const [genresSelection, setGenresSelection] = useState(
+    editBook?.genres || []
+  );
   const [selectedGenreIds, setSelectedGenreIds] = useState(
-    initialGenresSelection.join(",")
+    genresSelection.join(",")
   );
 
   const {
@@ -74,14 +77,31 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
     },
   });
 
-  watch((value, _info) => {
-    if (typeof value.forChildren === "undefined") return;
-    if (value.forChildren) {
-      setAppropriateGenres(genres.children);
-    } else {
-      setAppropriateGenres(genres.adult);
-    }
-  });
+  // for children checkbox change
+  useEffect(() => {
+    const subscription = watch((value, info) => {
+      if (info.name !== "forChildren") return;
+      if (typeof value.forChildren === "undefined") return;
+      if (info.type !== "change") return;
+
+      setAppropriateGenres(value.forChildren ? genres.children : genres.adult);
+      setGenresSelection([]);
+      setSelectedGenreIds("");
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  function handleAuthorIds(newAuthorIds: string[]) {
+    const newCommaSeparatedAuthorIds = newAuthorIds.join(",");
+    setSelectedAuthorIds(newCommaSeparatedAuthorIds);
+    setValue("authors", newCommaSeparatedAuthorIds, { shouldValidate: true });
+  }
+
+  function handleGenreIds(newGenreIds: string[]) {
+    const newCommaSeparatedGenreIds = newGenreIds.join(",");
+    setSelectedGenreIds(newCommaSeparatedGenreIds);
+    setValue("genres", newCommaSeparatedGenreIds, { shouldValidate: true });
+  }
 
   async function submit(inputs: Inputs) {
     const formData = new FormData();
@@ -102,18 +122,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
       await postBook(formData);
     }
     handleClose(true);
-  }
-
-  function handleAuthorIds(newAuthorIds: string[]) {
-    const newCommaSeparatedAuthorIds = newAuthorIds.join(",");
-    setSelectedAuthorIds(newCommaSeparatedAuthorIds);
-    setValue("authors", newCommaSeparatedAuthorIds, { shouldValidate: true });
-  }
-
-  function handleGenreIds(newGenreIds: string[]) {
-    const newCommaSeparatedGenreIds = newGenreIds.join(",");
-    setSelectedGenreIds(newCommaSeparatedGenreIds);
-    setValue("genres", newCommaSeparatedGenreIds, { shouldValidate: true });
   }
 
   return (
@@ -267,7 +275,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
           <label htmlFor="genres" className="table-cell">
             Genres
           </label>
-          <div className="table-cell">
+          <div className="table-cell max-w-[500px]">
             <TokenizedInput
               tokens={appropriateGenres.map((g) => {
                 return {
@@ -275,7 +283,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
                   name: g,
                 };
               })}
-              initialSelection={initialGenresSelection}
+              initialSelection={genresSelection}
               handleOutput={(newGenreIds) => handleGenreIds(newGenreIds)}
             />
             <input

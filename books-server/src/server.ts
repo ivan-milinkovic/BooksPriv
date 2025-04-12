@@ -261,10 +261,10 @@ type CreateBookDto = {
   price: string;
   quantity: string;
   publishDate: Date;
-  pageCount: number;
+  pageCount: string;
   genres: string; // comma separated genre ids, id = genre name
   authors: string; // comma separated  author ids
-  forChildren: boolean;
+  forChildren: string;
   description: string;
 };
 
@@ -276,6 +276,8 @@ app.post(
     const genres = inputs.genres.split(',').map((e) => e.trim());
     const authorIds = inputs.authors.split(',').map((e) => Number(e.trim()));
     let bookAuthors = authors.filter((a) => authorIds.includes(a.id));
+    const pageCount = Number(inputs.pageCount);
+    const forChildren = inputs.forChildren === 'true' ? true : false;
 
     const newBook: Book = {
       id: books[books.length - 1].id + 1,
@@ -284,10 +286,10 @@ app.post(
       price: Number(inputs.price),
       quantity: Number(inputs.quantity),
       publishDate: new Date(inputs.publishDate),
-      pageCount: inputs.pageCount,
+      pageCount: pageCount,
       genres: genres,
       authors: bookAuthors,
-      forChildren: inputs.forChildren,
+      forChildren: forChildren,
       image: req.file ? '/public/images/' + req.file.filename : null,
       description: inputs.description,
     };
@@ -324,16 +326,18 @@ app.put(
     const genres = inputs.genres.split(',').map((e) => e.trim());
     const authorIds = inputs.authors.split(',').map((e) => Number(e.trim()));
     let bookAuthors = authors.filter((a) => authorIds.includes(a.id));
+    const pageCount = Number(inputs.pageCount);
+    const forChildren = inputs.forChildren === 'true' ? true : false;
 
     book.title = inputs.title;
     book.isbn = inputs.isbn;
     book.price = Number(inputs.price);
     book.quantity = Number(inputs.quantity);
     book.publishDate = new Date(inputs.publishDate);
-    book.pageCount = inputs.pageCount;
+    book.pageCount = pageCount;
     book.genres = genres;
     book.authors = bookAuthors;
-    book.forChildren = inputs.forChildren;
+    book.forChildren = forChildren;
     book.description = inputs.description;
 
     if (req.file) {

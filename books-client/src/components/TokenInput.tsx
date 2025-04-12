@@ -13,14 +13,15 @@ type Props = {
 
 const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
   const allIds = tokens.map((t) => t.id);
-  const [selectedIds, setSelectedIds] = useState<string[]>(
-    allIds.filter((id) => initialSelection.includes(id))
-  );
-  const [remainingIds, setRemainingIds] = useState<string[]>(
-    allIds.filter((id) => !initialSelection.includes(id))
-  );
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [remainingIds, setRemainingIds] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<TokenizedInputToken[]>([]);
   const [search, setSearch] = useState<string>("");
+
+  useEffect(() => {
+    setSelectedIds(allIds.filter((id) => initialSelection.includes(id)));
+    setRemainingIds(allIds.filter((id) => !initialSelection.includes(id)));
+  }, [initialSelection]);
 
   function addSelection(tokenId: string) {
     const newSelectedIds = [...selectedIds, tokenId];
