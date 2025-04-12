@@ -244,6 +244,17 @@ function tryApplyImage(books: Book[]) {
   }
 }
 
+/* req.file:
+{
+  fieldname: 'image',
+  originalname: 'book-1283865_640.jpg',
+  encoding: '7bit',
+  mimetype: 'image/jpeg',
+  buffer: <Buffer ff d8 ff e0 00 10 4a  ... 47883 more bytes>,
+  size: 47933
+}
+*/
+
 type CreateBookDto = {
   title: string;
   isbn: string;
@@ -290,16 +301,50 @@ app.post(
   },
 );
 
-/*
-{
-  fieldname: 'image',
-  originalname: 'book-1283865_640.jpg',
-  encoding: '7bit',
-  mimetype: 'image/jpeg',
-  buffer: <Buffer ff d8 ff e0 00 10 4a  ... 47883 more bytes>,
-  size: 47933
-}
-*/
+app.put(
+  '/books/:bookId',
+  multerUploadBookImage.single('image'),
+  async (req: Request, res: Response) => {
+    const { bookId } = req.params;
+    const bookIdNum = Number(bookId);
+    if (Number.isNaN(bookIdNum)) {
+      res.status(404);
+      res.end();
+      return;
+    }
+
+    const book = books.find((b) => b.id === bookIdNum);
+    if (!book) {
+      res.status(404);
+      res.end();
+      return;
+    }
+
+    const inputs = req.body as CreateBookDto;
+    const genres = inputs.genres.split(',').map((e) => e.trim());
+    const authorIds = inputs.authors.split(',').map((e) => Number(e.trim()));
+    let bookAuthors = authors.filter((a) => authorIds.includes(a.id));
+
+    book.title = inputs.title;
+    book.isbn = inputs.isbn;
+    book.price = Number(inputs.price);
+    book.quantity = Number(inputs.quantity);
+    book.publishDate = new Date(inputs.publishDate);
+    book.pageCount = inputs.pageCount;
+    book.genres = genres;
+    book.authors = bookAuthors;
+    book.forChildren = inputs.forChildren;
+    book.description = inputs.description;
+
+    if (req.file) {
+      book.image && tryDeleteImage(book.image);
+      book.image = req.file ? '/public/images/' + req.file.filename : null;
+    }
+
+    res.status(200);
+    res.end();
+  },
+);
 
 app.delete('/books', async (req: Request, res: Response) => {
   const ids = req.body as number[];
@@ -310,18 +355,21 @@ app.delete('/books', async (req: Request, res: Response) => {
   }
   const entities = books.filter((b) => ids.includes(b.id));
   for (const book of entities) {
-    if (book.image && !book.image.includes('placeholder')) {
-      const imagePath = rootPath + book.image;
-      fs.unlink(imagePath, (err) => {
-        if (err) console.error(`Failed to delete image: ${imagePath}`);
-      });
-    }
+    book.image && tryDeleteImage(book.image);
   }
   setBooks(books.filter((b) => !ids.includes(b.id)));
 
   res.status(200);
   res.end();
 });
+
+function tryDeleteImage(image: string) {
+  if (image.includes('placeholder')) return;
+  const imagePath = rootPath + image;
+  fs.unlink(imagePath, (err) => {
+    if (err) console.error(`Failed to delete image: ${imagePath}`);
+  });
+}
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
   const err = createError(404);

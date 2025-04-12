@@ -26,23 +26,48 @@ type Inputs = {
   description: string;
 };
 
+function makeInputDate(dateString: string) {
+  const date = new Date(dateString);
+  var day = ("0" + date.getDate()).slice(-2); // adds zero, takes the last 2 (because 031)
+  var month = ("0" + (date.getMonth() + 1)).slice(-2);
+  return date.getFullYear() + "-" + month + "-" + day;
+}
+
 function BookForm({ editBook, authors, genres, handleClose }: Props) {
+  const initialForChildren = editBook?.forChildren || false;
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    defaultValues: {
+      title: editBook?.title || "Book X",
+      isbn: editBook?.isbn || "0-1645-2527-0",
+      price: editBook?.price || 10,
+      quantity: editBook?.quantity || 20,
+      publishDate: editBook?.publishDate
+        ? makeInputDate(editBook.publishDate)
+        : "2000-01-01",
+      pageCount: editBook?.pageCount || 200,
+      authors: "",
+      genres: "",
+      forChildren: initialForChildren === true, // because javascript...
+      description:
+        editBook?.description || "Etiam lobortis, libero id suscipit commodo.",
+    },
+  });
 
   const [appropriateGenres, setAppropriateGenres] = useState<Genre[]>(
-    genres.adult
+    initialForChildren ? genres.children : genres.adult
   );
   const [selectedAuthorIds, setSelectedAuthorIds] = useState("");
   const [selectedGenreIds, setSelectedGenreIds] = useState("");
 
   watch((value, _info) => {
-    if (value.forChildren === true) {
+    if (typeof value.forChildren === "undefined") return;
+    if (value.forChildren) {
       setAppropriateGenres(genres.children);
     } else {
       setAppropriateGenres(genres.adult);
@@ -59,17 +84,14 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
     formData.append("genres", inputs.genres);
     formData.append("authors", inputs.authors);
     formData.append("forChildren", inputs.forChildren ? "true" : "false");
-
     if (inputs.image && inputs.image.length == 1)
       formData.append("image", inputs.image[0]);
     formData.append("description", inputs.description);
-
     if (editBook) {
       await updateBook(editBook.id, formData);
     } else {
       await postBook(formData);
     }
-
     handleClose(true);
   }
 
@@ -122,7 +144,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="title"
             placeholder="title"
             className="table-cell"
-            defaultValue={editBook?.title || "Book X"}
             {...register("title", { required: true })}
           />
           <div className="table-cell">
@@ -139,7 +160,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="isbn"
             placeholder="isbn"
             className="table-cell"
-            defaultValue={editBook?.isbn || "0-1645-2527-0"}
             {...register("isbn", { required: true })}
           />
           <div className="table-cell">
@@ -156,7 +176,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="price"
             placeholder="price"
             className="table-cell"
-            defaultValue={editBook?.price || 10}
             {...register("price", { required: true })}
           />
           <div className="table-cell">
@@ -173,7 +192,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="quantity"
             placeholder="quantity"
             className="table-cell"
-            defaultValue={editBook?.quantity || 20}
             {...register("quantity", { required: true })}
           />
           <div className="table-cell">
@@ -192,7 +210,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="publishDate"
             placeholder="publishDate"
             className="table-cell"
-            defaultValue={initialDate}
             {...register("publishDate", { required: true })}
           />
           <div className="table-cell">
@@ -211,7 +228,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="pageCount"
             placeholder="pageCount"
             className="table-cell"
-            defaultValue={editBook?.pageCount || 200}
             {...register("pageCount", { required: true })}
           />
           <div className="table-cell">
@@ -256,7 +272,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
           <div className="table-cell">
             <TokenizedInput
               tokens={appropriateGenres.map((g) => {
-                // console.log(appropriateGenres[0]);
                 return {
                   id: g,
                   name: g,
@@ -289,9 +304,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
           <input
             type="checkbox"
             id="forChildren"
-            placeholder="forChildren"
             className="table-cell"
-            defaultChecked={editBook?.forChildren || false}
             {...register("forChildren")}
           />
           <div className="table-cell"></div>
@@ -305,10 +318,6 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="description"
             placeholder="description"
             className="table-cell resize min-w-[300px] min-h-[100px]"
-            defaultValue={
-              editBook?.description ||
-              "Etiam lobortis, libero id suscipit commodo."
-            }
             {...register("description")}
           />
           <div className="table-cell"></div>
