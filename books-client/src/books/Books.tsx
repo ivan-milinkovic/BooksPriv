@@ -3,6 +3,7 @@ import { GetBooksQuery } from "../queries/queryKeys";
 import { BooksList } from "./BooksList";
 import { useBooksSuspenseInfiniteQuery } from "../queries/booksQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
+import Filters from "../components/Filters";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -23,6 +24,10 @@ const Books = () => {
 
   return (
     <>
+      <div>
+        <Filters />
+      </div>
+
       <div>
         <LoadPrevButton
           hasMore={booksQuery.hasPreviousPage}

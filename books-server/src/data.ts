@@ -36,7 +36,6 @@ const adultGenres: Genre[] = [
   'Contemporary Romance',
   'Romantic Comedy',
   'Paranormal Romance',
-  'LGBTQ+ Romance',
   'Dark Romance',
   'Horror',
   'Dystopian',
