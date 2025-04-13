@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from "react";
 import { postBook, updateBook } from "../apiFunctions";
 import TokenizedInput from "../components/TokenInput";
 import { ApiUrl } from "../apiConfig";
+import { makeInputDate, makeInputDateFromString } from "../components/dateUtil";
 
 type Props = {
   editBook: Book | undefined;
@@ -25,13 +26,6 @@ type Inputs = {
   image?: FileList;
   description: string;
 };
-
-function makeInputDate(dateString: string) {
-  const date = new Date(dateString);
-  var day = ("0" + date.getDate()).slice(-2); // adds zero, takes the last 2 (because 031)
-  var month = ("0" + (date.getMonth() + 1)).slice(-2);
-  return date.getFullYear() + "-" + month + "-" + day;
-}
 
 function BookForm({ editBook, authors, genres, handleClose }: Props) {
   const initialForChildren = editBook?.forChildren || false;
@@ -65,7 +59,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
       price: editBook?.price || 10,
       quantity: editBook?.quantity || 20,
       publishDate: editBook?.publishDate
-        ? makeInputDate(editBook.publishDate)
+        ? makeInputDateFromString(editBook.publishDate)
         : "2000-01-01",
       pageCount: editBook?.pageCount || 200,
       authors: selectedAuthorIds,
@@ -220,6 +214,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             id="publishDate"
             placeholder="publishDate"
             className="table-cell"
+            max={makeInputDate(new Date())}
             {...register("publishDate", { required: true })}
           />
           <div className="table-cell">

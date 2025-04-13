@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { postAuthor } from "../apiFunctions";
+import { makeInputDate } from "../components/dateUtil";
 
 type Props = {
   handleClose: (changed: boolean) => void;
@@ -83,6 +84,7 @@ export default function AuthorForm({ handleClose }: Props) {
             type="date"
             id="dateOfBirth"
             className="table-cell border-b-1 border-gray-500"
+            max={makeInputDate(new Date())}
             {...register("dateOfBirth", { required: true })}
           />
           <div className="table-cell">
