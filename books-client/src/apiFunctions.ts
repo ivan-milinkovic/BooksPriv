@@ -18,7 +18,6 @@ export async function fetchFilteredBooksPage(
   cursor: Cursor,
   filter: FilterInfo
 ): Promise<BooksResponse> {
-  // console.log("fetchbooks");
   const filterQuery = queryFromFilter(filter);
   const url = `bookspage?pageIndex=${cursor.pageIndex}&pageSize=${cursor.pageSize}&${filterQuery}`;
   const res = await apiAxios.get(url);

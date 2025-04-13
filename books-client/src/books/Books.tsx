@@ -67,7 +67,12 @@ const Books = () => {
       </div>
 
       <div>
-        <BooksList books={books} />
+        <BooksList
+          books={books}
+          handleLastElementVisible={() => {
+            booksQuery.fetchNextPage();
+          }}
+        />
       </div>
 
       <div className="mb-8">
