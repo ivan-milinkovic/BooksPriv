@@ -108,6 +108,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
     formData.append("isbn", inputs.isbn);
     formData.append("price", inputs.price.toString());
     formData.append("publishDate", inputs.publishDate);
+    formData.append("quantity", inputs.quantity.toString());
     formData.append("pageCount", inputs.pageCount.toString());
     formData.append("genres", inputs.genres);
     formData.append("authors", inputs.authors);
