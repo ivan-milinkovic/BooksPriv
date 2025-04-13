@@ -33,10 +33,14 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
     initialForChildren ? genres.children : genres.adult
   );
 
-  const initialAuthorsSelection =
-    editBook?.authors.map((a) => a.id.toString()) || [];
+  // These double artist and genre pairs must be kept in sync at all times
+  // They help bridge TokenizedInput and react-hook-form
+  // by setting one to TokenizedInput and the other to the hidden input field registered with react-hook-form
+  const [authorsSelection, setAuthorsSelection] = useState(
+    editBook?.authors.map((a) => a.id.toString()) || []
+  );
   const [selectedAuthorIds, setSelectedAuthorIds] = useState(
-    initialAuthorsSelection.join(",")
+    authorsSelection.join(",")
   );
 
   const [genresSelection, setGenresSelection] = useState(
@@ -87,12 +91,14 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
   function handleAuthorIds(newAuthorIds: string[]) {
     const newCommaSeparatedAuthorIds = newAuthorIds.join(",");
     setSelectedAuthorIds(newCommaSeparatedAuthorIds);
+    setAuthorsSelection(newAuthorIds);
     setValue("authors", newCommaSeparatedAuthorIds, { shouldValidate: true });
   }
 
   function handleGenreIds(newGenreIds: string[]) {
     const newCommaSeparatedGenreIds = newGenreIds.join(",");
     setSelectedGenreIds(newCommaSeparatedGenreIds);
+    setGenresSelection(newGenreIds);
     setValue("genres", newCommaSeparatedGenreIds, { shouldValidate: true });
   }
 
@@ -136,7 +142,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
 
       <form
         onSubmit={handleSubmit(submit)}
-        className="table-auto border-spacing-2"
+        className="table-auto border-spacing-2 max-w-[600px]"
       >
         {/* Title */}
         <div className="table-row">
@@ -254,7 +260,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
                   name: a.name,
                 };
               })}
-              initialSelection={initialAuthorsSelection}
+              initialSelection={authorsSelection}
               handleOutput={(newAuthorIds) => handleAuthorIds(newAuthorIds)}
             />
             <input
@@ -274,7 +280,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
           <label htmlFor="genres" className="table-cell">
             Genres
           </label>
-          <div className="table-cell max-w-[500px]">
+          <div className="table-cell">
             <TokenizedInput
               tokens={appropriateGenres.map((g) => {
                 return {
