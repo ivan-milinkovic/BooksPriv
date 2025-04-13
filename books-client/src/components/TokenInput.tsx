@@ -11,6 +11,8 @@ type Props = {
   handleOutput: (ids: string[]) => void;
 };
 
+const MaxSuggestions = 10;
+
 const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
   const allIds = tokens.map((t) => t.id);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -55,7 +57,7 @@ const TokenizedInput = ({ tokens, initialSelection, handleOutput }: Props) => {
       .filter((t) => {
         return t.name.toLocaleLowerCase().includes(search.toLocaleLowerCase());
       })
-      .slice(0, 5);
+      .slice(0, MaxSuggestions);
     setSuggestions(newSuggestions);
   }, [search, tokens, remainingTokens]);
 
