@@ -45,6 +45,17 @@ const multerBookImageStorage = multer.diskStorage({
 });
 const multerUploadBookImage = multer({ storage: multerBookImageStorage });
 
+function checkAuthHandler(req: Request, res: Response, next: NextFunction) {
+  const session = tryGetSession(req, res);
+  if (session) {
+    next();
+  } else {
+    res.status(401);
+    res.end();
+    return;
+  }
+}
+
 var app = express();
 
 app.use(logger('common'));
@@ -83,22 +94,31 @@ app.get('/logout', async (req: Request, res: Response) => {
   res.end();
 });
 
-app.get('/whoami', async (req: Request, res: Response) => {
+function tryGetSession(req: Request, res: Response): BooksSession | null {
   const sessionString = req.cookies[serverConfig.sessionCookieName];
   if (!sessionString) {
-    res.send(guestUserInfo);
-    return;
+    return null;
   }
-  const booksSession: BooksSession = JSON.parse(sessionString);
-  if (!booksSession) {
-    res.send(guestUserInfo);
-    return;
+  try {
+    const booksSession: BooksSession = JSON.parse(sessionString);
+    return booksSession;
+  } catch {
+    res.clearCookie(serverConfig.sessionCookieName);
+    return null;
   }
-  const userInfo: UserInfo = {
-    email: booksSession.email,
-    isGuest: false,
-  };
-  res.send(userInfo);
+}
+
+app.get('/whoami', async (req: Request, res: Response) => {
+  const booksSession = tryGetSession(req, res);
+  if (booksSession) {
+    const userInfo: UserInfo = {
+      email: booksSession.email,
+      isGuest: false,
+    };
+    res.send(userInfo);
+  } else {
+    res.send(guestUserInfo);
+  }
 });
 
 app.get('/authors', async (req: Request, res: Response) => {
@@ -129,6 +149,11 @@ app.post('/authors', async (req: Request, res: Response) => {
     bio: body.bio,
     dateOfBirth: new Date(body.dateOfBirth),
   };
+  if (tryGetSession(req, res) === null) {
+    res.status(401);
+    res.end();
+    return;
+  }
   addAuthor(newAuthor);
   res.status(200);
   res.send(newAuthor);
@@ -238,7 +263,6 @@ app.get('/bookspage-cursor', async (req: Request, res: Response) => {
 });
 
 app.get('/books/:bookId', async (req: Request, res: Response) => {
-  console.log(req.params);
   const { bookId } = req.params;
   const bookIdNum = Number(bookId);
   if (Number.isNaN(bookIdNum)) {
@@ -292,6 +316,7 @@ type CreateBookDto = {
 
 app.post(
   '/books',
+  checkAuthHandler,
   multerUploadBookImage.single('image'),
   async (req: Request, res: Response) => {
     const inputs = req.body as CreateBookDto;
@@ -318,15 +343,13 @@ app.post(
 
     setBooks([...books, newBook]);
 
-    // console.log(req.body);
-    // console.log(req.file);
-
     res.end();
   },
 );
 
 app.put(
   '/books/:bookId',
+  checkAuthHandler,
   multerUploadBookImage.single('image'),
   async (req: Request, res: Response) => {
     const { bookId } = req.params;
@@ -372,7 +395,7 @@ app.put(
   },
 );
 
-app.delete('/books', async (req: Request, res: Response) => {
+app.delete('/books', checkAuthHandler, async (req: Request, res: Response) => {
   const ids = req.body as number[];
   if (!ids) {
     res.status(400);

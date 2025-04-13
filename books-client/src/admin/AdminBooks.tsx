@@ -96,7 +96,6 @@ const AdminBooks = () => {
 
   function handleFiltersUpdate(filterInfo: FilterInfo) {
     setFilter(filterInfo);
-    console.log(filterInfo);
   }
 
   const debouncedFilter0 = useDebounce(filter, 500);
