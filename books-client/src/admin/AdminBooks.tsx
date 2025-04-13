@@ -1,20 +1,29 @@
-import { Author, Book, Genres } from "../model/model";
+import AdminBooksToolbar from "./AdminBooksToolbar";
+import AdminBookList from "./AdminBookList";
+import BookForm from "./BookForm";
+import AuthorForm from "./AuthorForm";
+import Filters from "../components/Filters";
+import useDebounce from "../components/useDebounce";
 import { AdminGetBooksQuery } from "../queries/queryKeys";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Modal } from "../modal/Modal";
 import { useAuthorsSuspenseQuery } from "../queries/authorsQuery";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
-import AdminBooksToolbar from "./AdminBooksToolbar";
-import AdminBookList from "./AdminBookList";
-import BookForm from "./BookForm";
 import {
-  useBooksSuspenseInfiniteQuery,
   useDeleteBooksMutation,
+  useFilteredBooksInfiniteQuery,
 } from "../queries/booksQuery";
-import AuthorForm from "./AuthorForm";
+import {
+  Author,
+  Book,
+  FilterInfo,
+  Genres,
+  makeEmptyFilter,
+  queryFromFilter,
+} from "../model/model";
 
-const PageSize = 10;
+const PageSize = 20;
 const MaxPages = 3;
 
 const AdminBooks = () => {
@@ -23,10 +32,17 @@ const AdminBooks = () => {
   const [editBook, setEditBook] = useState<Book | undefined>(undefined);
   const [showAddAuthor, setShowAddAuthor] = useState<boolean>(false);
 
-  const booksQuery = useBooksSuspenseInfiniteQuery(
-    [AdminGetBooksQuery],
+  const [filter, setFilter] = useState<FilterInfo>(makeEmptyFilter());
+  const [debouncedFilter, setDebouncedFilter] = useState(makeEmptyFilter());
+  const filterQuery = useMemo(() => {
+    return queryFromFilter(debouncedFilter);
+  }, [debouncedFilter]);
+
+  const booksQuery = useFilteredBooksInfiniteQuery(
+    [AdminGetBooksQuery, filterQuery],
     PageSize,
-    MaxPages
+    MaxPages,
+    debouncedFilter
   );
   const authorsQuery = useAuthorsSuspenseQuery();
   const genresQuery = useGenresSuspenseQuery();
@@ -78,6 +94,16 @@ const AdminBooks = () => {
     if (changed) authorsQuery.refetch();
   }
 
+  function handleFiltersUpdate(filterInfo: FilterInfo) {
+    setFilter(filterInfo);
+    console.log(filterInfo);
+  }
+
+  const debouncedFilter0 = useDebounce(filter, 500);
+  useEffect(() => {
+    setDebouncedFilter(debouncedFilter0);
+  }, [debouncedFilter0]);
+
   return (
     <div className="mt-4">
       {/* Modals */}
@@ -109,6 +135,10 @@ const AdminBooks = () => {
           }}
           handleDelete={confirmDeletion}
         />
+      </div>
+
+      <div>
+        <Filters handleFiltersUpdate={handleFiltersUpdate} />
       </div>
 
       {/* Load Previous */}

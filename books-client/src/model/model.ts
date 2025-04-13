@@ -71,6 +71,15 @@ export type FilterInfo = {
   genresFilter: string[];
 };
 
+export function makeEmptyFilter() {
+  const emptyFilter: FilterInfo = {
+    titleFilter: "",
+    authorsFilter: "",
+    genresFilter: [],
+  };
+  return emptyFilter;
+}
+
 export function queryFromFilter(filter: FilterInfo): string {
   const genresFilter = filter.genresFilter.map((g) => g.trim()).join(",");
   return `titleFilter=${filter.titleFilter.trim()}&authorsFilter=${filter.authorsFilter.trim()}&genresFilter=${genresFilter}`;

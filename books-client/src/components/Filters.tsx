@@ -91,7 +91,7 @@ export default function Filters({ handleFiltersUpdate }: Props) {
         </div>
 
         <div className="m-t-4">
-          <div>Genres</div>
+          <div>Genres (AND)</div>
           <TagsPicker tags={tags} handleSelection={handleGenreSelection} />
         </div>
       </div>

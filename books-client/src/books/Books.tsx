@@ -6,19 +6,14 @@ import { LoadNextButton, LoadPrevButton } from "../components/LoadButtons";
 import Filters from "../components/Filters";
 import useDebounce from "../components/useDebounce";
 import Loading from "../Loading";
-import { FilterInfo, queryFromFilter } from "../model/model";
+import { FilterInfo, makeEmptyFilter, queryFromFilter } from "../model/model";
 
 const PageSize = 10;
 const MaxPages = 3;
 
-const emptyFilter: FilterInfo = {
-  titleFilter: "",
-  authorsFilter: "",
-  genresFilter: [],
-};
-
 const Books = () => {
-  const [debouncedFilter, setDebouncedFilter] = useState(emptyFilter);
+  const [filter, setFilter] = useState<FilterInfo>(makeEmptyFilter());
+  const [debouncedFilter, setDebouncedFilter] = useState(makeEmptyFilter());
 
   const filterQuery = useMemo(() => {
     return queryFromFilter(debouncedFilter);
@@ -30,8 +25,6 @@ const Books = () => {
     MaxPages,
     debouncedFilter
   );
-
-  const [filter, setFilter] = useState<FilterInfo>(emptyFilter);
 
   const booksData = booksQuery.data;
 
