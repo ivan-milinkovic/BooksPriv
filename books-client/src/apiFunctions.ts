@@ -1,5 +1,6 @@
 import { apiAxios } from "./axios";
 import {
+  Author,
   BooksResponse,
   Cursor,
   FilterInfo,
@@ -23,6 +24,18 @@ export async function fetchFilteredBooksPage(
   const res = await apiAxios.get(url);
   const booksRes = res.data as BooksResponse;
   return booksRes;
+}
+
+export async function postAuthor(author: {
+  name: string;
+  bio: string;
+  dateOfBirth: string;
+}): Promise<Author> {
+  return await apiAxios({
+    method: "post",
+    url: "authors",
+    data: JSON.stringify(author),
+  });
 }
 
 export async function postBook(formData: FormData) {

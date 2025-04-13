@@ -44,7 +44,7 @@ const adultGenres: Genre[] = [
 ];
 
 const authorIndices = Array.from({ length: 5 }, (val, index) => index);
-const authors = authorIndices.map((i): Author => {
+let authors = authorIndices.map((i): Author => {
   return {
     id: i,
     name: `Author ${i}`,
@@ -98,8 +98,12 @@ let books = bookIndices.map((i): Book => {
   };
 });
 
+function addAuthor(newAuthor: Author) {
+  authors.push(newAuthor);
+}
+
 function setBooks(newBooks: Book[]) {
   books = newBooks;
 }
 
-export { authors, books, childrenGenres, adultGenres, setBooks };
+export { authors, books, childrenGenres, adultGenres, addAuthor, setBooks };

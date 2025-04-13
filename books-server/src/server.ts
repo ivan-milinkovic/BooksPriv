@@ -5,6 +5,7 @@ import multer from 'multer';
 import fs from 'node:fs';
 import { Request, Response, NextFunction } from 'express';
 import {
+  addAuthor,
   adminUser,
   adultGenres,
   authors,
@@ -14,6 +15,7 @@ import {
   setBooks,
 } from './data';
 import {
+  Author,
   Book,
   BooksResponse,
   BooksSession,
@@ -110,6 +112,26 @@ app.get('/genres', async (req: Request, res: Response) => {
     adult: adultGenres,
   };
   res.send(genres);
+});
+
+export type AddAuthorDto = {
+  id: number;
+  name: string;
+  bio: string;
+  dateOfBirth: Date;
+};
+
+app.post('/authors', async (req: Request, res: Response) => {
+  const body = req.body;
+  const newAuthor: Author = {
+    id: authors.length,
+    name: body.name,
+    bio: body.bio,
+    dateOfBirth: new Date(body.dateOfBirth),
+  };
+  addAuthor(newAuthor);
+  res.status(200);
+  res.send(newAuthor);
 });
 
 app.get('/books', async (req: Request, res: Response) => {

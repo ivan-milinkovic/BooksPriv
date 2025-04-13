@@ -2,13 +2,15 @@ import { useMemo } from "react";
 
 type Props = {
   selection: number[];
-  handleAdd: () => void;
+  handleAddAuthor: () => void;
+  handleAddBook: () => void;
   handleDelete: () => void;
 };
 
 export default function AdminBooksToolbar({
   selection,
-  handleAdd,
+  handleAddAuthor,
+  handleAddBook,
   handleDelete,
 }: Props) {
   const formattedSelection = useMemo(() => {
@@ -17,7 +19,10 @@ export default function AdminBooksToolbar({
 
   return (
     <>
-      <button onClick={handleAdd} className="secondary-button">
+      <button onClick={handleAddAuthor} className="secondary-button">
+        Add Author
+      </button>
+      <button onClick={handleAddBook} className="secondary-button ms-2">
         Add Book
       </button>
       <span className="mx-4">|</span>

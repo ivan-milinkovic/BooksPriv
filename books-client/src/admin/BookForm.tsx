@@ -124,10 +124,12 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
   }
 
   return (
-    <div onSubmit={handleSubmit(submit)} className="subtle-background p-4">
+    <div className="subtle-background p-4">
       {/* Close Button */}
       <span className="w-full">
-        <span className="text-2xl">Add Book</span>
+        <span className="text-2xl">
+          {editBook ? `Edit Book (id:${editBook.id})` : "Add Book"}
+        </span>
         <button
           onClick={() => {
             handleClose(false);
@@ -138,7 +140,10 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
         </button>
       </span>
 
-      <form className="table-auto border-spacing-2">
+      <form
+        onSubmit={handleSubmit(submit)}
+        className="table-auto border-spacing-2"
+      >
         {/* Title */}
         <div className="table-row">
           <label htmlFor="title" className="table-cell">

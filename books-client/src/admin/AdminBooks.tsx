@@ -12,6 +12,7 @@ import {
   useBooksSuspenseInfiniteQuery,
   useDeleteBooksMutation,
 } from "../queries/booksQuery";
+import AuthorForm from "./AuthorForm";
 
 const PageSize = 10;
 const MaxPages = 3;
@@ -20,6 +21,7 @@ const AdminBooks = () => {
   const [selection, setSelection] = useState<number[]>([]);
   const [showAddBook, setShowAddBook] = useState<boolean>(false);
   const [editBook, setEditBook] = useState<Book | undefined>(undefined);
+  const [showAddAuthor, setShowAddAuthor] = useState<boolean>(false);
 
   const booksQuery = useBooksSuspenseInfiniteQuery(
     [AdminGetBooksQuery],
@@ -71,6 +73,11 @@ const AdminBooks = () => {
     if (changed) booksQuery.refetch();
   }
 
+  function handleAuthorFormClose(changed: boolean) {
+    setShowAddAuthor(false);
+    if (changed) authorsQuery.refetch();
+  }
+
   return (
     <div className="mt-4">
       {/* Modals */}
@@ -84,12 +91,20 @@ const AdminBooks = () => {
           />
         </Modal>
       )}
+      {showAddAuthor && (
+        <Modal>
+          <AuthorForm handleClose={handleAuthorFormClose} />
+        </Modal>
+      )}
 
       {/* Toolbar */}
       <div className="mb-4">
         <AdminBooksToolbar
           selection={selection}
-          handleAdd={() => {
+          handleAddAuthor={() => {
+            setShowAddAuthor(true);
+          }}
+          handleAddBook={() => {
             setShowAddBook(true);
           }}
           handleDelete={confirmDeletion}
