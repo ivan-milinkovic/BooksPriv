@@ -5,6 +5,7 @@ import { Author, Book } from "../model/model";
 import { apiAxios } from "../axios";
 import useCart from "../cart/useCart";
 import { ApiUrl } from "../apiConfig";
+import { formatDateFromString } from "../components/dateUtil";
 
 const BookDetails = () => {
   const { bookId } = useParams();
@@ -49,7 +50,9 @@ const BookDetails = () => {
         </div>
         <div className="table-row">
           <span className="table-cell subtle-text">Publish Date</span>
-          <span className="table-cell">{book.publishDate}</span>
+          <span className="table-cell">
+            {formatDateFromString(book.publishDate)}
+          </span>
         </div>
         <div className="table-row">
           <span className="table-cell subtle-text">Description</span>

@@ -5,7 +5,7 @@ import AuthorForm from "./AuthorForm";
 import Filters from "../components/Filters";
 import useDebounce from "../components/useDebounce";
 import { AdminGetBooksQuery } from "../queries/queryKeys";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Modal } from "../modal/Modal";
 import { useAuthorsSuspenseQuery } from "../queries/authorsQuery";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
@@ -33,7 +33,7 @@ const AdminBooks = () => {
   const [showAddAuthor, setShowAddAuthor] = useState<boolean>(false);
 
   const [filter, setFilter] = useState<FilterInfo>(makeEmptyFilter());
-  const [debouncedFilter, setDebouncedFilter] = useState(makeEmptyFilter());
+  const debouncedFilter = useDebounce(filter, 500);
   const filterQuery = useMemo(() => {
     return queryFromFilter(debouncedFilter);
   }, [debouncedFilter]);
@@ -97,11 +97,6 @@ const AdminBooks = () => {
   function handleFiltersUpdate(filterInfo: FilterInfo) {
     setFilter(filterInfo);
   }
-
-  const debouncedFilter0 = useDebounce(filter, 500);
-  useEffect(() => {
-    setDebouncedFilter(debouncedFilter0);
-  }, [debouncedFilter0]);
 
   return (
     <div className="mt-4">

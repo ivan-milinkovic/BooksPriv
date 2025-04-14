@@ -53,7 +53,7 @@ export default function Filters({ handleFiltersUpdate }: Props) {
       genresFilter: genresSelection,
     };
     handleFiltersUpdate(filterInfo);
-  }, [title, authors, genresSelection]);
+  }, [title, authors, genresSelection]); // putting handleFiltersUpdate here breaks it
 
   return (
     <div className="max-w-[700px]">

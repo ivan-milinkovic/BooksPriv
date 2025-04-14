@@ -1,6 +1,7 @@
 import { ChangeEvent } from "react";
 import { Author, Book } from "../model/model";
 import { Link } from "react-router";
+import { formatDateFromString } from "../components/dateUtil";
 
 type Props = {
   books: Book[];
@@ -42,11 +43,18 @@ const AdminBookList = ({ books, onBookSelected, onBookEdit }: Props) => {
               <td>{book.isbn}</td>
               <td>{book.title}</td>
               <td className="max-w-[300px]">{formatAuthors(book.authors)}</td>
-              <td>{book.publishDate}</td>
+              <td>{formatDateFromString(book.publishDate)}</td>
               <td>
                 <div>
-                  <button
+                  <Link
+                    to={"/books/" + book.id}
                     className="link"
+                    target="_blank"
+                  >
+                    ⓘ
+                  </Link>
+                  <button
+                    className="link ms-4"
                     onClick={() => {
                       onBookEdit(book.id);
                     }}

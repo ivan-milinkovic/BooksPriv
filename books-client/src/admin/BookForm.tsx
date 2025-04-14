@@ -86,7 +86,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
       setSelectedGenreIds("");
     });
     return () => subscription.unsubscribe();
-  }, [watch]);
+  }, [watch, genres]);
 
   function handleAuthorIds(newAuthorIds: string[]) {
     const newCommaSeparatedAuthorIds = newAuthorIds.join(",");

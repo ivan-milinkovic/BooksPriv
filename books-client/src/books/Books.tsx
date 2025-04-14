@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { GetBooksQuery } from "../queries/queryKeys";
 import { BooksList } from "./BooksList";
 import { useFilteredBooksInfiniteQuery } from "../queries/booksQuery";
@@ -13,7 +13,7 @@ const MaxPages = 3;
 
 const Books = () => {
   const [filter, setFilter] = useState<FilterInfo>(makeEmptyFilter());
-  const [debouncedFilter, setDebouncedFilter] = useState(makeEmptyFilter());
+  const debouncedFilter = useDebounce(filter, 500);
 
   const filterQuery = useMemo(() => {
     return queryFromFilter(debouncedFilter);
@@ -36,12 +36,6 @@ const Books = () => {
   function handleFiltersUpdate(filterInfo: FilterInfo) {
     setFilter(filterInfo);
   }
-
-  const debouncedFilter0 = useDebounce(filter, 500);
-
-  useEffect(() => {
-    setDebouncedFilter(debouncedFilter0);
-  }, [debouncedFilter0]);
 
   return (
     <>
