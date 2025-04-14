@@ -53,7 +53,7 @@ export default function Filters({ handleFiltersUpdate }: Props) {
       genresFilter: genresSelection,
     };
     handleFiltersUpdate(filterInfo);
-  }, [title, authors, genresSelection]); // putting handleFiltersUpdate here breaks it
+  }, [title, authors, genresSelection]); // putting handleFiltersUpdate here creates an infinite render loop
 
   return (
     <div className="max-w-[700px]">
