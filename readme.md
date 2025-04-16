@@ -2,6 +2,8 @@
 
 `zsh run.sh`
 
+(will open a few terminals)
+
 or
 
 `cd books-server && npm run dev`

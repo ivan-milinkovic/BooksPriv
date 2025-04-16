@@ -1,15 +1,13 @@
 import dotenv from 'dotenv';
+import path from 'node:path';
 
 dotenv.config();
 
-interface ServerConfiguration {
-  port: number;
-  sessionCookieName: string;
-}
-
-const config: ServerConfiguration = {
+const serverConfig = {
   port: Number(process.env.BOOKS_PORT) || 3000,
-  sessionCookieName: 'books-session',
 };
 
-export default config;
+const sessionCookieName = 'books-session';
+const rootPath = path.join(__dirname, '../');
+
+export { serverConfig, rootPath, sessionCookieName };
