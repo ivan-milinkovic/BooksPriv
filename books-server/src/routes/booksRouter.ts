@@ -7,6 +7,8 @@ import { authors, books, setBooks } from '../data';
 import { Book, BooksResponse, Cursor } from '../model';
 import { rootPath } from '../config';
 
+const booksRouter = express.Router();
+
 // Setup book image upload
 const multerBookImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -23,8 +25,6 @@ const multerBookImageStorage = multer.diskStorage({
   },
 });
 const multerUploadBookImage = multer({ storage: multerBookImageStorage });
-
-const booksRouter = express.Router();
 
 booksRouter.get('/', async (req: Request, res: Response) => {
   const pageIndex = Number(req.query.pageIndex);

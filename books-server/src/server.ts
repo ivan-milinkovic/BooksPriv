@@ -14,7 +14,7 @@ import {
 import { Author, BooksSession, Genres, UserInfo } from './model';
 import path from 'node:path';
 import { tryGetSession } from './sessionUtil';
-import booksRouter from './routes/booksRoute';
+import booksRouter from './routes/booksRouter';
 
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
