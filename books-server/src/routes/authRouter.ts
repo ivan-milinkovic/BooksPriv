@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { adminUser, guestUserInfo } from '../data';
+import { adminUser, guestUserInfo } from '../genData';
 import { BooksSession, UserInfo } from '../model';
 import { sessionCookieName } from '../config';
 import { tryGetSession } from '../sessionUtil';

@@ -16,17 +16,20 @@ model Author {
   name        String
   bio         String
   dateOfBirth DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   books Book[]
 }
 
 model Genre {
-  id        Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
+  name        String
+  forChildren Boolean
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  bookId    Int?
 
   books Book[]
 }
@@ -40,7 +43,7 @@ model Book {
   quantity    Int
   pageCount   Int
   forChildren Boolean
-  image       String
+  image       String?
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

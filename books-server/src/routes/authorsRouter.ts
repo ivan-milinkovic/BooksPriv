@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Author } from '../model';
-import { addAuthor, authors } from '../data';
+import { addAuthor, authors } from '../genData';
 import { tryGetSession } from '../sessionUtil';
 
 const authorsRouter = express.Router();

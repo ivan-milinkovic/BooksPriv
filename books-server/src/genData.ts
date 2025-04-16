@@ -10,16 +10,7 @@ export const guestUserInfo: UserInfo = {
   isGuest: true,
 };
 
-const nonFictionGenres: Genre[] = [
-  'Science',
-  'Fiction',
-  'Mystery',
-  'Thriller',
-  'Romance',
-  'Adventure',
-  'Literary Fiction',
-  'Contemporary Fiction',
-];
+const nonFictionGenres: Genre[] = [];
 
 const childrenGenres: Genre[] = [
   'Picture Books',
@@ -41,6 +32,14 @@ const adultGenres: Genre[] = [
   'Dystopian',
   'Magical Realism',
   'Historical Fiction',
+  'Science',
+  'Fiction',
+  'Mystery',
+  'Thriller',
+  'Romance',
+  'Adventure',
+  'Literary Fiction',
+  'Contemporary Fiction',
 ];
 
 const genres: Genres = {

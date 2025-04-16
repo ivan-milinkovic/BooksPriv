@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs';
 import checkAuthHandler from '../sessionUtil';
-import { authors, books, setBooks } from '../data';
+import { authors, books, setBooks } from '../genData';
 import { Book, BooksResponse, Cursor } from '../model';
 import { rootPath } from '../config';
 
