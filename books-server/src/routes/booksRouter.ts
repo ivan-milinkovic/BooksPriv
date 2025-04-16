@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs';
@@ -26,7 +26,7 @@ const multerBookImageStorage = multer.diskStorage({
 });
 const multerUploadBookImage = multer({ storage: multerBookImageStorage });
 
-booksRouter.get('/', async (req: Request, res: Response) => {
+booksRouter.get('/books', async (req: Request, res: Response) => {
   const pageIndex = Number(req.query.pageIndex);
   const pageSize = Number(req.query.pageSize);
   if (Number.isNaN(pageIndex) || Number.isNaN(pageSize)) {
@@ -94,7 +94,7 @@ booksRouter.get('/', async (req: Request, res: Response) => {
   res.send(booksResponse);
 });
 
-booksRouter.get('/:bookId', async (req: Request, res: Response) => {
+booksRouter.get('/books/:bookId', async (req: Request, res: Response) => {
   const { bookId } = req.params;
   const bookIdNum = Number(bookId);
   if (Number.isNaN(bookIdNum)) {
@@ -147,7 +147,7 @@ type CreateBookDto = {
 };
 
 booksRouter.post(
-  '/',
+  '/books',
   checkAuthHandler,
   multerUploadBookImage.single('image'),
   async (req: Request, res: Response) => {
@@ -180,7 +180,7 @@ booksRouter.post(
 );
 
 booksRouter.put(
-  '/:bookId',
+  '/books/:bookId',
   checkAuthHandler,
   multerUploadBookImage.single('image'),
   async (req: Request, res: Response) => {
@@ -228,7 +228,7 @@ booksRouter.put(
 );
 
 booksRouter.delete(
-  '/',
+  '/books',
   checkAuthHandler,
   async (req: Request, res: Response) => {
     const ids = req.body as number[];
@@ -257,7 +257,7 @@ function tryDeleteImage(image: string) {
 }
 
 // An idea, not used
-booksRouter.get('/page-cursor', async (req: Request, res: Response) => {
+booksRouter.get('/books/page-cursor', async (req: Request, res: Response) => {
   let nextCursor: Cursor;
   if (req.query.cursor) {
     const inEncodedJsonCursor = req.query.cursor as string;

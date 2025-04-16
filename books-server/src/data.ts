@@ -1,4 +1,4 @@
-import { Author, Book, Genre, User, UserInfo } from './model';
+import { Author, Book, Genre, Genres, User, UserInfo } from './model';
 
 export const adminUser: User = {
   email: 'admin@books',
@@ -42,6 +42,11 @@ const adultGenres: Genre[] = [
   'Magical Realism',
   'Historical Fiction',
 ];
+
+const genres: Genres = {
+  children: childrenGenres,
+  adult: adultGenres,
+};
 
 const authorIndices = Array.from({ length: 5 }, (val, index) => index);
 let authors = authorIndices.map((i): Author => {
@@ -106,4 +111,4 @@ function setBooks(newBooks: Book[]) {
   books = newBooks;
 }
 
-export { authors, books, childrenGenres, adultGenres, addAuthor, setBooks };
+export { authors, books, genres, addAuthor, setBooks };
