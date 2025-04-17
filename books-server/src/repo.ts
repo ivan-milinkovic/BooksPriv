@@ -50,6 +50,7 @@ class Repo {
     });
   }
 
+  // todo: Inneficient way, how to query the same?
   static async getBooks2(
     pageIndex: number,
     pageSize: number,
@@ -95,8 +96,6 @@ class Repo {
         return false;
       }); */
 
-      console.log(genresFilter);
-      console.log(resBooks.length);
       // AND filter
       resBooks = resBooks.filter((b) => {
         for (const fg of genresFilter) {
