@@ -1,3 +1,15 @@
+# Express
+
+https://github.com/TryGhost/node-sqlite3
+
+https://sequelize.org
+
+https://blog.logrocket.com/express-typescript-node/
+
+https://medium.com/@gabrieldrouin/node-js-2025-guide-how-to-setup-express-js-with-typescript-eslint-and-prettier-b342cd21c30d
+
+https://nodejs.org/en/learn/getting-started/nodejs-the-difference-between-development-and-production
+
 # Prisma ORM
 
 https://www.prisma.io/docs/getting-started/quickstart-sqlite
@@ -19,3 +31,9 @@ https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-c
 https://github.com/prisma/prisma-examples?tab=readme-ov-file#real-world--production-ready-example-projects-with-prisma
 
 Type safety: https://www.prisma.io/docs/orm/prisma-client/type-safety
+
+# Attribution
+
+Book placeholders found at:
+https://pixabay.com/photos/music-book-old-literature-hymnal-3510326/
+https://pixabay.com/photos/book-pages-chapters-open-open-book-1283865/
