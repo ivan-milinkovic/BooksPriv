@@ -30,7 +30,9 @@ const UserProvider = ({ children }: Props) => {
     retry: 0,
   });
 
-  if (userQuery.isLoading) return <>Checking user...</>;
+  if (userQuery.isLoading || userQuery.isRefetching) {
+    return <>Checking user...</>;
+  }
 
   const newUserInfo = userQuery.data as UserInfo;
 
