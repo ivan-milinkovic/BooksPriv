@@ -28,7 +28,7 @@ export default function AdminBooksToolbar({
       <span className="mx-4">|</span>
       <span>
         Selected IDs: &nbsp;
-        <span>{formattedSelection}</span>
+        <span>[{formattedSelection}]</span>
       </span>
       <span>
         <button onClick={handleDelete} className="secondary-button ms-2">

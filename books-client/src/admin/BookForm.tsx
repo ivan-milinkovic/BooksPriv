@@ -44,7 +44,7 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
   );
 
   const [genresSelection, setGenresSelection] = useState(
-    editBook?.genres || []
+    editBook?.genres.map((g) => g.id.toString()) || []
   );
   const [selectedGenreIds, setSelectedGenreIds] = useState(
     genresSelection.join(",")
@@ -285,8 +285,8 @@ function BookForm({ editBook, authors, genres, handleClose }: Props) {
             <TokenizedInput
               tokens={appropriateGenres.map((g) => {
                 return {
-                  id: g,
-                  name: g,
+                  id: g.id.toString(),
+                  name: g.name,
                 };
               })}
               initialSelection={genresSelection}

@@ -129,7 +129,7 @@ const createBookSchema = z.object({
   publishDate: z.date(),
   pageCount: z.number(),
   genreIds: z.array(z.number()),
-  authors: z.array(z.number()),
+  authorIds: z.array(z.number()),
   forChildren: z.boolean(),
   description: z.string(),
   image: z.optional(z.string()),
@@ -160,7 +160,10 @@ booksRouter.post(
       image: req.file ? '/public/images/' + req.file.filename : null,
     };
 
-    if (!createBookSchema.safeParse(newBookData).success) {
+    const zodResult = createBookSchema.safeParse(newBookData);
+    if (!zodResult.success) {
+      console.log('zod');
+      console.log(zodResult.error);
       res.status(400);
       res.end();
       return;

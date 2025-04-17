@@ -7,7 +7,7 @@
 or
 
 `cd books-server && npm run dev`
-`cd books-client && npm run dev`
+`cd books-client && npx prisma generate && npm run dev`
 
 # Client
 
