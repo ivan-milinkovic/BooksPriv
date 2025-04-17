@@ -34,6 +34,12 @@ app.get('/resetdb', (req: Request, res: Response, next: NextFunction) => {
   fs.unlinkSync(rootPath + 'database/books.sqlite');
   fs.copyFileSync(books0Path, booksPath);
   Repo.reconnect();
+  const imagesPath = rootPath + 'public/images';
+  const files = fs.readdirSync(imagesPath);
+  for (const file of files) {
+    if (file.includes('placeholder')) continue;
+    fs.unlinkSync(imagesPath + '/' + file);
+  }
   res.end();
 });
 
