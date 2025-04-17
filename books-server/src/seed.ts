@@ -1,5 +1,5 @@
-import { PrismaClient } from '../gen/prisma';
-import { authors, books, genres } from './genData';
+import { PrismaClient } from './generated/prisma';
+import { authors, books, childrenGenresStr, adultGenresStr } from './genData';
 
 const prisma = new PrismaClient();
 
@@ -13,11 +13,11 @@ async function seed() {
     };
   });
   let gid = 0;
-  const adultGenreData = genres.adult.map((g) => {
-    return { id: gid++, name: g, forChildren: false };
-  });
-  const childrenGenreData = genres.adult.map((g) => {
+  const childrenGenreData = childrenGenresStr.map((g) => {
     return { id: gid++, name: g, forChildren: true };
+  });
+  const adultGenreData = adultGenresStr.map((g) => {
+    return { id: gid++, name: g, forChildren: false };
   });
   const genresData = [...childrenGenreData, ...adultGenreData];
 
@@ -60,7 +60,7 @@ async function seed() {
     const bookAuthors = await prisma.author.findMany({
       where: {
         name: {
-          in: b.authors.map((a) => a.name),
+          in: b.authorNames,
         },
       },
     });
@@ -71,7 +71,7 @@ async function seed() {
     const bookGenres = await prisma.genre.findMany({
       where: {
         name: {
-          in: b.genres,
+          in: b.genreNames,
         },
       },
     });

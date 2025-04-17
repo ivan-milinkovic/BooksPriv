@@ -5,7 +5,11 @@ export type Author = {
   dateOfBirth: Date;
 };
 
-export type Genre = string;
+export type Genre = {
+  id: number;
+  name: string;
+  forChildren: boolean;
+};
 
 export type Genres = {
   children: Genre[];
@@ -68,7 +72,7 @@ export function prevCursor(
 export type FilterInfo = {
   titleFilter: string;
   authorsFilter: string;
-  genresFilter: string[];
+  genresFilter: number[];
 };
 
 export function makeEmptyFilter() {
@@ -81,26 +85,8 @@ export function makeEmptyFilter() {
 }
 
 export function queryFromFilter(filter: FilterInfo): string {
-  const genresFilter = filter.genresFilter.map((g) => g.trim()).join(",");
+  const genresFilter = filter.genresFilter
+    .map((gid) => gid.toString())
+    .join(",");
   return `titleFilter=${filter.titleFilter.trim()}&authorsFilter=${filter.authorsFilter.trim()}&genresFilter=${genresFilter}`;
 }
-
-// export class Cursor {
-//   public readonly pageIndex: number;
-//   public readonly pageSize: number;
-
-//   constructor(pageIndex: number, pageSize: number) {
-//     this.pageIndex = pageIndex;
-//     this.pageSize = pageSize;
-//   }
-
-//   public nextCursor(expectedPageSize: number): Cursor | null {
-//     if (this.pageSize < expectedPageSize) return null;
-//     return new Cursor(this.pageIndex + 1, expectedPageSize);
-//   }
-
-//   public prevCursor(expectedPageSize: number): Cursor | null {
-//     if (this.pageIndex == 0) return null;
-//     return new Cursor(this.pageIndex - 1, expectedPageSize);
-//   }
-// }

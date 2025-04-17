@@ -5,7 +5,7 @@ import { useUserInfo } from "./auth/useUserInfo";
 
 const Header = () => {
   const userInfo = useUserInfo();
-  const isLoggedIn: boolean = !userInfo.isGuest;
+  const isLoggedIn: boolean = userInfo ? !userInfo.isGuest : false;
 
   return (
     <header className="flex flex-row justify-between m-4">

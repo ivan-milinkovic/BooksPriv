@@ -1,11 +1,17 @@
 import express, { Request, Response } from 'express';
-import { genres } from '../genData';
+import Repo from '../repo';
 
 const genresRouter = express.Router();
 
 genresRouter.get('/genres', async (req: Request, res: Response) => {
-  res.status(200);
-  res.send(genres);
+  const allGenres = await Repo.getGenres();
+  const childrenGenres = allGenres.filter((g) => g.forChildren);
+  const adultGenres = allGenres.filter((g) => !g.forChildren);
+  const result = {
+    children: childrenGenres,
+    adult: adultGenres,
+  };
+  res.send(result);
 });
 
 export default genresRouter;

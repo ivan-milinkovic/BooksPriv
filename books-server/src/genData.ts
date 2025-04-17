@@ -1,4 +1,4 @@
-import { Author, Book, Genre, Genres, User, UserInfo } from './model';
+import { User, UserInfo } from './model';
 
 export const adminUser: User = {
   email: 'admin@books',
@@ -10,9 +10,7 @@ export const guestUserInfo: UserInfo = {
   isGuest: true,
 };
 
-const nonFictionGenres: Genre[] = [];
-
-const childrenGenres: Genre[] = [
+const childrenGenresStr: string[] = [
   'Picture Books',
   'Early Readers',
   'Middle Grade',
@@ -22,7 +20,7 @@ const childrenGenres: Genre[] = [
   'Educational',
 ];
 
-const adultGenres: Genre[] = [
+const adultGenresStr: string[] = [
   'Historical Romance',
   'Contemporary Romance',
   'Romantic Comedy',
@@ -42,13 +40,8 @@ const adultGenres: Genre[] = [
   'Contemporary Fiction',
 ];
 
-const genres: Genres = {
-  children: childrenGenres,
-  adult: adultGenres,
-};
-
 const authorIndices = Array.from({ length: 5 }, (val, index) => index);
-let authors = authorIndices.map((i): Author => {
+let authors = authorIndices.map((i) => {
   return {
     id: i,
     name: `Author ${i}`,
@@ -70,20 +63,14 @@ function randomSlice1<T>(array: T[]): T[] {
   return array.slice(start, end);
 }
 
-let books = bookIndices.map((i): Book => {
-  // find random authors for a book
-  // const start = Math.random() * authors.length;
-  // const len = Math.random() * 5;
-  // const someAuthors = authors.slice(start, start + len);
-  const someAuthors = randomSlice1(authors);
+let books = bookIndices.map((i) => {
+  const authorNames = randomSlice1(authors).map((a) => a.name);
 
   // pick some genres
   const forChildren = Math.random() >= 0.5;
-  let genres: Genre[] = forChildren
-    ? randomSlice1(childrenGenres)
-    : randomSlice1(adultGenres);
-
-  const placeholderNum = Math.random() < 0.5 ? 1 : 2;
+  let genreNames: string[] = forChildren
+    ? randomSlice1(childrenGenresStr)
+    : randomSlice1(adultGenresStr);
 
   return {
     id: i,
@@ -93,8 +80,8 @@ let books = bookIndices.map((i): Book => {
     quantity: 30,
     publishDate: new Date(2020, i % 12, i % 28),
     pageCount: 200,
-    genres: genres,
-    authors: someAuthors,
+    authorNames: authorNames,
+    genreNames: genreNames,
     forChildren: forChildren,
     image: null,
     description:
@@ -102,12 +89,4 @@ let books = bookIndices.map((i): Book => {
   };
 });
 
-function addAuthor(newAuthor: Author) {
-  authors.push(newAuthor);
-}
-
-function setBooks(newBooks: Book[]) {
-  books = newBooks;
-}
-
-export { authors, books, genres, addAuthor, setBooks };
+export { authors, books, childrenGenresStr, adultGenresStr };

@@ -14,7 +14,7 @@ benchmarks/graphs
 
 dist/
 
-# gen/
+src/generated/
 
 # ignore additional files using core.excludesFile
 # https://git-scm.com/docs/gitignore

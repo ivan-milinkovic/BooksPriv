@@ -1,30 +1,29 @@
 import express, { Request, Response } from 'express';
-import { Author } from '../model';
-import { addAuthor, authors } from '../genData';
-import { tryGetSession } from '../sessionUtil';
+import { CreateAuthorData } from '../model';
+import checkAuthHandler, { tryGetSession } from '../sessionUtil';
+import Repo from '../repo';
 
 const authorsRouter = express.Router();
 
 authorsRouter.get('/authors', async (req: Request, res: Response) => {
+  const authors = await Repo.getAuthors();
   res.send(authors);
 });
 
-authorsRouter.post('/authors', async (req: Request, res: Response) => {
-  const body = req.body;
-  const newAuthor: Author = {
-    id: authors.length,
-    name: body.name,
-    bio: body.bio,
-    dateOfBirth: new Date(body.dateOfBirth),
-  };
-  if (tryGetSession(req, res) === null) {
-    res.status(401);
-    res.end();
-    return;
-  }
-  addAuthor(newAuthor);
-  res.status(200);
-  res.send(newAuthor);
-});
+authorsRouter.post(
+  '/authors',
+  checkAuthHandler,
+  async (req: Request, res: Response) => {
+    const body = req.body;
+    const newAuthor: CreateAuthorData = {
+      name: body.name,
+      bio: body.bio,
+      dateOfBirth: new Date(body.dateOfBirth),
+    };
+    await Repo.createAuthor(newAuthor);
+    res.status(200);
+    res.send(newAuthor);
+  },
+);
 
 export default authorsRouter;

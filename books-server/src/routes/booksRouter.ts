@@ -2,10 +2,17 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs';
+import Repo from '../repo';
 import checkAuthHandler from '../sessionUtil';
-import { authors, books, setBooks } from '../genData';
-import { Book, BooksResponse, Cursor } from '../model';
+import {
+  BookDto,
+  BooksResponse,
+  CreateBookData,
+  CreateBookDto,
+  UpdateBookData,
+} from '../model';
 import { rootPath } from '../config';
+import { z } from 'zod';
 
 const booksRouter = express.Router();
 
@@ -35,62 +42,42 @@ booksRouter.get('/books', async (req: Request, res: Response) => {
     return;
   }
 
-  const titleFilter = req.query.titleFilter as string;
-  const authorsFilter = req.query.authorsFilter as string;
-  const genresFilter = req.query.genresFilter as string;
-
-  let resBooks: Book[] = books;
-
-  // Filter by title
-  if (titleFilter && titleFilter.length > 0) {
-    resBooks = resBooks.filter((b) => b.title.includes(titleFilter));
+  const titleFilter = req.query.titleFilter as string | undefined;
+  const authorsFilter = req.query.authorsFilter as string | undefined;
+  const genresFilter = req.query.genresFilter as string | undefined;
+  let genresFilterIds: number[] = [];
+  if (genresFilter) {
+    const genresSplit = genresFilter?.split(',');
+    if (genresSplit) {
+      for (const gidStr of genresSplit) {
+        const n = Number(gidStr);
+        if (Number.isNaN(n)) {
+          res.status(400);
+          res.end();
+          return;
+        }
+        genresFilterIds.push(n);
+      }
+    }
   }
 
-  // Filter by authors
-  if (authorsFilter && authorsFilter.length > 0) {
-    resBooks = resBooks.filter((b) => {
-      for (const a of b.authors) {
-        if (a.name.includes(authorsFilter)) return true;
-      }
-      return false;
-    });
-  }
+  console.log(genresFilterIds);
 
-  // Filter by genres
-  if (genresFilter && genresFilter.length > 0) {
-    const filterGenres = genresFilter.split(',');
+  const bookEntities = await Repo.getBooks2(
+    pageIndex,
+    pageSize,
+    titleFilter,
+    authorsFilter,
+    genresFilterIds,
+  );
 
-    // OR filter
-    /* resBooks = resBooks.filter((b) => {
-      for (const g of b.genres) {
-        if (filterGenres.includes(g)) return true;
-      }
-      return false;
-    }); */
-
-    // AND filter
-    resBooks = resBooks.filter((b) => {
-      for (const fg of filterGenres) {
-        if (!b.genres.includes(fg)) return false;
-      }
-      return true;
-    });
-  }
-
-  // Filter by page
-  const start = pageIndex * pageSize;
-  resBooks = resBooks.slice(start, start + pageSize);
-
-  // Response
-  tryApplyImage(resBooks);
+  tryApplyImage(bookEntities);
 
   const booksResponse: BooksResponse = {
     pageIndex: pageIndex,
-    pageSize: resBooks.length,
-    books: resBooks,
+    pageSize: bookEntities.length,
+    books: bookEntities,
   };
-
-  res.status(200);
   res.send(booksResponse);
 });
 
@@ -102,18 +89,19 @@ booksRouter.get('/books/:bookId', async (req: Request, res: Response) => {
     res.end();
     return;
   }
-  const book = books.find((b) => b.id === bookIdNum);
+
+  const book: BookDto | null = await Repo.getBook(bookIdNum);
   if (!book) {
     res.status(404);
     res.end();
     return;
   }
+
   tryApplyImage([book]);
-  res.status(200);
   res.send(book);
 });
 
-function tryApplyImage(books: Book[]) {
+function tryApplyImage(books: BookDto[]) {
   for (let b of books) {
     if (!b.image) {
       const placeholderNum = Math.random() < 0.5 ? 1 : 2;
@@ -133,18 +121,19 @@ function tryApplyImage(books: Book[]) {
 }
 */
 
-type CreateBookDto = {
-  title: string;
-  isbn: string;
-  price: string;
-  quantity: string;
-  publishDate: Date;
-  pageCount: string;
-  genres: string; // comma separated genre ids, id = genre name
-  authors: string; // comma separated  author ids
-  forChildren: string;
-  description: string;
-};
+const createBookSchema = z.object({
+  isbn: z.string(),
+  title: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+  publishDate: z.date(),
+  pageCount: z.number(),
+  genreIds: z.array(z.number()),
+  authors: z.array(z.number()),
+  forChildren: z.boolean(),
+  description: z.string(),
+  image: z.optional(z.string()),
+});
 
 booksRouter.post(
   '/books',
@@ -152,28 +141,32 @@ booksRouter.post(
   multerUploadBookImage.single('image'),
   async (req: Request, res: Response) => {
     const inputs = req.body as CreateBookDto;
-    const genres = inputs.genres.split(',').map((e) => e.trim());
     const authorIds = inputs.authors.split(',').map((e) => Number(e.trim()));
-    let bookAuthors = authors.filter((a) => authorIds.includes(a.id));
+    const genreIds = inputs.genres.split(',').map((e) => Number(e.trim()));
     const pageCount = Number(inputs.pageCount);
     const forChildren = inputs.forChildren === 'true' ? true : false;
 
-    const newBook: Book = {
-      id: books[books.length - 1].id + 1,
+    const newBookData: CreateBookData = {
       title: inputs.title,
       isbn: inputs.isbn,
       price: Number(inputs.price),
       quantity: Number(inputs.quantity),
       publishDate: new Date(inputs.publishDate),
       pageCount: pageCount,
-      genres: genres,
-      authors: bookAuthors,
       forChildren: forChildren,
-      image: req.file ? '/public/images/' + req.file.filename : null,
       description: inputs.description,
+      authorIds: authorIds,
+      genreIds: genreIds,
+      image: req.file ? '/public/images/' + req.file.filename : null,
     };
 
-    setBooks([...books, newBook]);
+    if (!createBookSchema.safeParse(newBookData).success) {
+      res.status(400);
+      res.end();
+      return;
+    }
+
+    await Repo.createBook(newBookData);
 
     res.end();
   },
@@ -192,37 +185,40 @@ booksRouter.put(
       return;
     }
 
-    const book = books.find((b) => b.id === bookIdNum);
+    const book = await Repo.getBook(bookIdNum);
     if (!book) {
       res.status(404);
       res.end();
       return;
     }
 
+    if (req.file) {
+      book.image && tryDeleteImage(book.image);
+    }
+
     const inputs = req.body as CreateBookDto;
-    const genres = inputs.genres.split(',').map((e) => e.trim());
     const authorIds = inputs.authors.split(',').map((e) => Number(e.trim()));
-    let bookAuthors = authors.filter((a) => authorIds.includes(a.id));
+    const genreIds = inputs.genres.split(',').map((e) => Number(e.trim()));
     const pageCount = Number(inputs.pageCount);
     const forChildren = inputs.forChildren === 'true' ? true : false;
 
-    book.title = inputs.title;
-    book.isbn = inputs.isbn;
-    book.price = Number(inputs.price);
-    book.quantity = Number(inputs.quantity);
-    book.publishDate = new Date(inputs.publishDate);
-    book.pageCount = pageCount;
-    book.genres = genres;
-    book.authors = bookAuthors;
-    book.forChildren = forChildren;
-    book.description = inputs.description;
+    const bookData: UpdateBookData = {
+      id: bookIdNum,
+      title: inputs.title,
+      isbn: inputs.isbn,
+      price: Number(inputs.price),
+      quantity: Number(inputs.quantity),
+      publishDate: new Date(inputs.publishDate),
+      pageCount: pageCount,
+      forChildren: forChildren,
+      description: inputs.description,
+      authorIds: authorIds,
+      genreIds: genreIds,
+      image: req.file ? '/public/images/' + req.file.filename : null,
+    };
 
-    if (req.file) {
-      book.image && tryDeleteImage(book.image);
-      book.image = req.file ? '/public/images/' + req.file.filename : null;
-    }
+    await Repo.updateBook(bookData);
 
-    res.status(200);
     res.end();
   },
 );
@@ -237,13 +233,15 @@ booksRouter.delete(
       res.end();
       return;
     }
-    const entities = books.filter((b) => ids.includes(b.id));
-    for (const book of entities) {
+
+    // delete images
+    const books = await Repo.getBooksByIds(ids);
+    for (const book of books) {
       book.image && tryDeleteImage(book.image);
     }
-    setBooks(books.filter((b) => !ids.includes(b.id)));
 
-    res.status(200);
+    await Repo.deleteBooksByIds(ids);
+
     res.end();
   },
 );
@@ -257,6 +255,7 @@ function tryDeleteImage(image: string) {
 }
 
 // An idea, not used
+/*
 booksRouter.get('/books/page-cursor', async (req: Request, res: Response) => {
   let nextCursor: Cursor;
   if (req.query.cursor) {
@@ -285,5 +284,6 @@ booksRouter.get('/books/page-cursor', async (req: Request, res: Response) => {
   res.status(200);
   res.send(enc);
 });
+*/
 
 export default booksRouter;

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useGenresSuspenseQuery } from "../queries/genresQuery";
 import TagsPicker from "./TagsPicker";
-import { FilterInfo, Genre } from "../model/model";
+import { FilterInfo } from "../model/model";
 
 type Props = {
   handleFiltersUpdate: (filterInfo: FilterInfo) => void;
@@ -10,7 +10,7 @@ type Props = {
 export default function Filters({ handleFiltersUpdate }: Props) {
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState("");
-  const [genresSelection, setGenresSelection] = useState<Genre[]>([]);
+  const [selectedGenreIds, setSelectedGenreIds] = useState<number[]>([]);
 
   const genresQuery = useGenresSuspenseQuery();
   const genres = genresQuery.data;
@@ -24,25 +24,30 @@ export default function Filters({ handleFiltersUpdate }: Props) {
   }
 
   const isGenreSelected = useCallback(
-    (id: string) => {
-      return genresSelection.findIndex((g) => g === id) >= 0;
+    (id: number) => {
+      return selectedGenreIds.findIndex((gid) => gid === id) >= 0;
     },
-    [genresSelection]
+    [selectedGenreIds]
   );
 
-  function handleGenreSelection(genreId: string) {
-    let newGenresSelection: Genre[];
+  function handleGenreSelection(genreIdStr: string) {
+    const genreId = Number(genreIdStr);
+    let newGenresSelection: number[];
     if (isGenreSelected(genreId))
-      newGenresSelection = genresSelection.filter((g) => g !== genreId);
+      newGenresSelection = selectedGenreIds.filter((gid) => gid !== genreId);
     else {
-      newGenresSelection = [...genresSelection, genreId];
+      newGenresSelection = [...selectedGenreIds, genreId];
     }
-    setGenresSelection(newGenresSelection);
+    setSelectedGenreIds(newGenresSelection);
   }
 
   const tags = useMemo(() => {
     return [...genres.children, ...genres.adult].map((g) => {
-      return { id: g, name: g, isSelected: isGenreSelected(g) };
+      return {
+        id: g.id.toString(),
+        name: g.name,
+        isSelected: isGenreSelected(g.id),
+      };
     });
   }, [genres, isGenreSelected]);
 
@@ -50,10 +55,10 @@ export default function Filters({ handleFiltersUpdate }: Props) {
     const filterInfo: FilterInfo = {
       titleFilter: title,
       authorsFilter: authors,
-      genresFilter: genresSelection,
+      genresFilter: selectedGenreIds,
     };
     handleFiltersUpdate(filterInfo);
-  }, [title, authors, genresSelection]); // putting handleFiltersUpdate here creates an infinite render loop
+  }, [title, authors, selectedGenreIds]); // putting handleFiltersUpdate here creates an infinite render loop
 
   return (
     <div className="max-w-[700px]">

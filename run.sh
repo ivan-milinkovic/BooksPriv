@@ -1,6 +1,6 @@
 #! /bin/zsh
 
-server_script="cd '$PWD/books-server' && pwd && npm ci && npm run dev"
+server_script="cd '$PWD/books-server' && pwd && npm ci && npx prisma generate && npm run dev"
 server_term_command="tell app \"Terminal\" to do script \"$server_script\""
 osascript -e $server_term_command
 

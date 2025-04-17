@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import Loading from "../Loading";
-import { Author, Book } from "../model/model";
+import { Author, Book, Genre } from "../model/model";
 import { apiAxios } from "../axios";
 import useCart from "../cart/useCart";
 import { ApiUrl } from "../apiConfig";
@@ -21,6 +21,10 @@ const BookDetails = () => {
 
   function formatAuthors(authors: Author[]): string {
     return authors.map((a) => a.name).join(", ");
+  }
+
+  function formatGenres(genres: Genre[]): string {
+    return genres.map((g) => g.name).join(", ");
   }
 
   if (bookQuery.isLoading) return <Loading />;
@@ -46,7 +50,7 @@ const BookDetails = () => {
         </div>
         <div className="table-row">
           <span className="table-cell subtle-text">Genres</span>
-          <span className="table-cell">{book.genres.join(", ")}</span>
+          <span className="table-cell">{formatGenres(book.genres)}</span>
         </div>
         <div className="table-row">
           <span className="table-cell subtle-text">Publish Date</span>
