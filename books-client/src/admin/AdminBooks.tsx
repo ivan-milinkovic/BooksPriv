@@ -22,6 +22,7 @@ import {
   makeEmptyFilter,
   queryFromFilter,
 } from "../model/model";
+import { resetDb } from "../apiFunctions";
 
 const PageSize = 20;
 const MaxPages = 3;
@@ -98,6 +99,13 @@ const AdminBooks = () => {
     setFilter(filterInfo);
   }
 
+  function onResetDb() {
+    resetDb();
+    booksQuery.refetch();
+    authorsQuery.refetch();
+    genresQuery.refetch();
+  }
+
   return (
     <div className="mt-4">
       {/* Modals */}
@@ -129,6 +137,9 @@ const AdminBooks = () => {
           }}
           handleDelete={confirmDeletion}
         />
+        <button className="link ms-4" onClick={onResetDb}>
+          reset db
+        </button>
       </div>
 
       <div>

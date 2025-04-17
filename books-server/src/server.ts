@@ -5,8 +5,10 @@ import booksRouter from './routes/booksRouter';
 import authRouter from './routes/authRouter';
 import genresRouter from './routes/genresRouter';
 import authorsRouter from './routes/authorsRouter';
+import fs from 'node:fs';
 import { serverConfig, rootPath } from './config';
 import { Request, Response, NextFunction } from 'express';
+import Repo from './repo';
 
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
@@ -25,6 +27,15 @@ app.use('/', authRouter);
 app.use('/', booksRouter);
 app.use('/', authorsRouter);
 app.use('/', genresRouter);
+
+app.get('/resetdb', (req: Request, res: Response, next: NextFunction) => {
+  const booksPath = rootPath + 'database/books.sqlite';
+  const books0Path = rootPath + 'database/books0.sqlite';
+  fs.unlinkSync(rootPath + 'database/books.sqlite');
+  fs.copyFileSync(books0Path, booksPath);
+  Repo.reconnect();
+  res.end();
+});
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
   const err = createError(404);

@@ -54,3 +54,7 @@ export async function updateBook(bookId: number, formData: FormData) {
     data: formData,
   });
 }
+
+export async function resetDb() {
+  await apiAxios.get("/resetdb");
+}

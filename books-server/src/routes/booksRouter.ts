@@ -132,7 +132,7 @@ const createBookSchema = z.object({
   authorIds: z.array(z.number()),
   forChildren: z.boolean(),
   description: z.string(),
-  image: z.optional(z.string()),
+  image: z.string().nullish(),
 });
 
 booksRouter.post(

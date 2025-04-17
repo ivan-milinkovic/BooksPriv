@@ -214,6 +214,11 @@ class Repo {
       },
     });
   }
+
+  static async reconnect() {
+    await prisma.$disconnect();
+    await prisma.$connect();
+  }
 }
 
 export default Repo;
